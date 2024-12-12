@@ -4,6 +4,7 @@ from beanie import init_beanie
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+import certifi
 
 from app.core.config import settings
 from app.api.v1.routers import router
@@ -12,7 +13,7 @@ from app.core.security import get_password_hash
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    db_client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING).onekout
+    db_client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING, tlsCAFile=certifi.where()).onekout
 
     await init_beanie(
         database=db_client,

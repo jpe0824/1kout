@@ -12,8 +12,9 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8   # 8 days
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
-        "http://localhost:3000"
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl | str] = [
+        # "http://localhost:3000/"
+        "*"
     ]
     PROJECT_NAME: str = "1kOutside"
 
