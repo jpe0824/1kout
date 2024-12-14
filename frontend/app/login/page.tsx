@@ -16,14 +16,29 @@ export default function Login() {
     setError(null);
 
     await login(username, password)
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((err) => console.log(err));
   };
 
-  const handleTest1 = async () => {
-    await isAuthenticated().then().catch();
+  const handleTest1 = async (): Promise<void> => {
+    try {
+      try {
+        const isAuthenticatedResult = await isAuthenticated();
+      } catch {
+        console.log("User is not authenticated");
+
+        // Attempt to refresh the token
+        const refreshed = await refreshToken();
+
+        if (refreshed) {
+          console.log("Authentication successful after refresh");
+        } else {
+          console.log("Failed to authenticate after refresh");
+        }
+      }
+    } catch {
+      console.log(error);
+    }
   };
 
   return (
