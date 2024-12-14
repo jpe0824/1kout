@@ -1,84 +1,111 @@
-"use server";
+"use client";
 
-import { authApi, configuration } from "@/api";
+import {
+  loginApiV1AuthLoginPost,
+  refreshTokenApiV1AuthRefreshPost,
+  testTokenApiV1AuthTestTokenPost,
+} from "@/client";
+import { TokenSchema, LoginApiV1AuthLoginPostData } from "@/client/types.gen";
 import { cookies } from "next/headers";
+import { client } from "@/client";
 
-function setCookie(
-  name: string,
-  value: string,
-  options: { path: string; maxAge?: number }
-) {
-  const cookieStore = cookies();
-  cookieStore.set(name, value, options);
-}
+client.setConfig({
+  baseUrl: "http://localhost:8000",
+  headers: {
+    Authorization: "Bearer <token_from_service_client>",
+  },
+});
 
-function getCookie(name: string) {
-  const cookieStore = cookies();
-  return cookieStore.get(name)?.value;
-}
+// function setCookie(
+//   name: string,
+//   value: string,
+//   options: { path: string; maxAge?: number }
+// ) {
+//   const cookieStore = cookies();
+//   cookieStore.set(name, value, options);
+// }
 
-function clearCookies() {
-  const cookieStore = cookies();
-  cookieStore.delete("access_token");
-  cookieStore.delete("refresh_token");
-}
+// function getCookie(name: string) {
+//   const cookieStore = cookies();
+//   return cookieStore.get(name)?.value;
+// }
 
-export async function login(username: string, password: string) {
-  await authApi
-    .loginApiV1AuthLoginPost(username, password)
-    .then((res) => {
-      configuration.username = username;
-      configuration.password = password;
-      configuration.accessToken = res.data.access_token;
+// function clearCookies() {
+//   const cookieStore = cookies();
+//   cookieStore.delete("access_token");
+//   cookieStore.delete("refresh_token");
+// }
 
-      setCookie("access_token", res.data.access_token, {
-        path: "/",
-        maxAge: 30,
-      });
-      setCookie("refresh_token", res.data.refresh_token, {
-        path: "/",
-        maxAge: 2 * 60,
-      });
+export async function login(username: string, password: string): Promise<void> {
+  try {
+    const loginData: LoginApiV1AuthLoginPostData = {
+      body: {
+        grant_type: "password",
+        username,
+        password,
+        scope: "",
+        client_id: null,
+        client_secret: null,
+      },
+    };
 
-      console.log(res.status);
+    const result = await loginApiV1AuthLoginPost(loginData);
 
-      return res.status;
-    })
-    .catch((err) => {
-      throw err;
-    });
+    if (
+      result.data &&
+      "access_token" in result.data &&
+      "refresh_token" in result.data
+    ) {
+      // // setCookie("access_token", result.data.access_token, {
+      // //   path: "/",
+      // //   maxAge: 30 * 60, // Changed to seconds
+      // });
+      // // setCookie("refresh_token", result.data.refresh_token, {
+      // //   path: "/",
+      // //   maxAge: 2 * 60 * 60, // Changed to seconds
+      // });
+
+      console.log(result.data);
+      return;
+    } else {
+      throw new Error("Invalid response from login API");
+    }
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw error;
+  }
 }
 
 export async function isAuthenticated(): Promise<boolean> {
-  const isAuthenticated = await authApi.testTokenApiV1AuthTestTokenPost();
+  const isAuthenticated = await testTokenApiV1AuthTestTokenPost();
 
-  if (isAuthenticated.statusText == "OK") {
+  if (isAuthenticated.response.statusText == "OK") {
     return true;
   }
   return false;
 }
 
 export async function refreshToken(): Promise<boolean> {
-  const refreshToken = getCookie("refresh_token");
+  const refreshToken = "";
   if (!refreshToken) return false;
 
-  await authApi
-    .refreshTokenApiV1AuthRefreshPost(refreshToken)
+  await refreshTokenApiV1AuthRefreshPost({ body: refreshToken })
     .then((res) => {
-      setCookie("access_token", res.data.access_token, {
-        path: "/",
-        maxAge: 60,
-      });
-      setCookie("refresh_token", res.data.refresh_token, {
-        path: "/",
-        maxAge: 8 * 24 * 60,
-      });
+      if (!res.data) return false;
+      // setCookie("access_token", res.data.access_token, {
+      //   path: "/",
+      //   maxAge: 60,
+      // });
+      // setCookie("refresh_token", res.data.refresh_token, {
+      //   path: "/",
+      //   maxAge: 8 * 24 * 60,
+      // });
 
       return true;
     })
     .catch((err) => {
       console.log(err);
-      clearCookies();
+      // clearCookies();
       return false;
     });
   return false;

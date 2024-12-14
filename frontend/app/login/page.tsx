@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authApi } from "@/api";
 import { login, isAuthenticated, refreshToken } from "@/lib/auth";
+import { client } from "@/client";
 
 export default function Login() {
   const [username, setUsername] = useState("");

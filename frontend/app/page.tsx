@@ -1,3 +1,4 @@
+import { client } from "@/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   NavigationMenu,
@@ -11,6 +12,13 @@ import {
   NavigationMenuLink,
 } from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
+
+client.setConfig({
+  baseUrl: "http://localhost:8000",
+  headers: {
+    Authorization: "Bearer <token_from_service_client>",
+  },
+});
 
 export default function Home() {
   return (
