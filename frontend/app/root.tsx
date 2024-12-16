@@ -10,6 +10,14 @@ import {
 import type { Route } from "./+types/root";
 import { ThemeProvider } from "./components/theme-provider";
 import "./app.css";
+import { client } from "client";
+import { middleware } from "./lib/middleware";
+
+client.setConfig({
+  baseUrl: "http://localhost:8000",
+});
+
+middleware();
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

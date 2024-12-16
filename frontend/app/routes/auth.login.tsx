@@ -1,5 +1,6 @@
+import Login from "@/pages/auth/login";
 import React from "react";
 
-export default function Login() {
-  return <div>Login</div>;
+export default function AuthLogin() {
+  return <Login />;
 }
