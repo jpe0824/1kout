@@ -1,17 +1,26 @@
-import { BodyLogin, login, refresh, testToken } from "client";
+import { toast } from "@/hooks/use-toast";
+import { BodyLogin, login, refresh, testToken, User } from "client";
 
-export async function loginUser(loginData: BodyLogin) {
+export async function loginUser(loginData: BodyLogin): Promise<void> {
   await login({ body: loginData })
     .then((res) => {
       if (res.response.ok && res.data) {
         localStorage.setItem("auth_token", res.data.access_token);
         localStorage.setItem("refresh_token", res.data.refresh_token);
+        toast({
+          title: "Successfully logged in!",
+        });
       } else {
-        throw res.response.status;
+        throw res.error?.detail;
       }
     })
     .catch((err) => {
-      console.log("error");
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `${err}`,
+      });
+      throw err;
     });
 }
 
@@ -30,10 +39,12 @@ export async function refreshAuth() {
         localStorage.setItem("auth_token", res.data.access_token);
         localStorage.setItem("refresh_token", res.data.refresh_token);
       } else {
-        throw res.response.status;
+        throw res.error;
       }
     })
-    .catch();
+    .catch((err) => {
+      throw err;
+    });
 }
 
 export function logout() {

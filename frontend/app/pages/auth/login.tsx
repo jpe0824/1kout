@@ -18,17 +18,19 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import React from "react";
 import { zBody_login } from "client/zod.gen";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { ShootingStars } from "@/components/ui/shooting-starts";
 import { StarsBackground } from "@/components/ui/stars-background";
-import { loginUser, testAuth } from "@/lib/auth";
-import { BodyLogin, LoginData } from "client";
-import { Link } from "react-router";
+import { loginUser } from "@/lib/auth";
+import { BodyLogin } from "client";
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
 
 export default function Login() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof zBody_login>>({
     resolver: zodResolver(zBody_login),
     defaultValues: {
@@ -37,13 +39,21 @@ export default function Login() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof zBody_login>) {
+  async function onSubmit(values: z.infer<typeof zBody_login>) {
+    setLoading(true);
     const loginData: BodyLogin = {
       username: values.username,
       password: values.password,
       grant_type: "password",
     };
-    loginUser(loginData);
+    try {
+      await loginUser(loginData);
+      setLoading(false);
+      navigate("/");
+    } catch {
+      setLoading(false);
+      //err handled on auth.ts util
+    }
   }
 
   return (
@@ -93,7 +103,7 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button className="w-full" type="submit">
+              <Button className="w-full" type="submit" disabled={loading}>
                 Next
               </Button>
             </form>

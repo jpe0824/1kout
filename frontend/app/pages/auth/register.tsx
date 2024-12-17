@@ -24,11 +24,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ToastAction } from "@radix-ui/react-toast";
 import { BodyRegisterUser, registerUser } from "client";
 import { zBody_register_user } from "client/zod.gen";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 export default function RegisterUser() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof zBody_register_user>>({
     resolver: zodResolver(zBody_register_user),
@@ -42,6 +45,7 @@ export default function RegisterUser() {
   });
 
   function onSubmit(values: z.infer<typeof zBody_register_user>) {
+    setLoading(true);
     const formData: BodyRegisterUser = {
       email: values.email,
       password: values.password,
@@ -53,26 +57,23 @@ export default function RegisterUser() {
       .then((res) => {
         if (res.response.ok) {
           toast({
-            title: "Success!",
-            description: `Welcome ${values.nick_name}`,
+            title: "Successfully created new user!",
+            description: `Welcome ${values?.nick_name || ""}`,
           });
+          navigate("/auth/login");
         } else {
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: `${res.error?.detail}`,
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-          });
+          throw res.error?.detail;
         }
       })
       .catch((err) => {
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description: `An unexpected error occurred.`,
+          description: `${err}`,
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
       });
+    setLoading(false);
   }
 
   return (
@@ -159,7 +160,7 @@ export default function RegisterUser() {
                   </FormItem>
                 )}
               />
-              <Button className="w-full" type="submit">
+              <Button className="w-full" type="submit" disabled={loading}>
                 Next
               </Button>
             </form>
