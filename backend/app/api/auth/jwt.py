@@ -14,7 +14,7 @@ import jwt
 auth_router = APIRouter()
 
 
-@auth_router.post('/login', summary="Create access and refresh tokens for user", response_model=TokenSchema)
+@auth_router.post('/login', operation_id="login", summary="Create access and refresh tokens for user", response_model=TokenSchema)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
     user = await authenticate_user(email=form_data.username, password=form_data.password)
     if not user:
@@ -29,12 +29,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
     }
 
 
-@auth_router.post('/test-token', summary="Test if the access token is valid", response_model=user_schema.User)
+@auth_router.post('/test-token', operation_id="test_token", summary="Test if the access token is valid", response_model=user_schema.User)
 async def test_token(user: user_model.User = Depends(get_current_user)):
     return user
 
 
-@auth_router.post('/refresh', summary="Refresh token", response_model=TokenSchema)
+@auth_router.post('/refresh', operation_id="refresh", summary="Refresh token", response_model=TokenSchema)
 async def refresh_token(refresh_token: str = Body(...)):
     try:
         payload = jwt.decode(
@@ -45,6 +45,12 @@ async def refresh_token(refresh_token: str = Body(...)):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except (jwt.ExpiredSignatureError):
+        raise HTTPException(
+            status_code = status.HTTP_403_FORBIDDEN,
+            detail="Token expired",
             headers={"WWW-Authenticate": "Bearer"},
         )
     user = await get_user_by_id(token_data.sub)

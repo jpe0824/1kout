@@ -26,6 +26,7 @@ import { ShootingStars } from "@/components/ui/shooting-starts";
 import { StarsBackground } from "@/components/ui/stars-background";
 import { loginUser, testAuth } from "@/lib/auth";
 import { BodyLogin, LoginData } from "client";
+import { Link } from "react-router";
 
 export default function Login() {
   const form = useForm<z.infer<typeof zBody_login>>({
@@ -45,16 +46,12 @@ export default function Login() {
     loginUser(loginData);
   }
 
-  function onTest() {
-    testAuth();
-  }
-
   return (
     <div className="flex justify-center items-center w-screen h-screen">
       <Card className="m-2 p-4 w-96 lg:w-96">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Sign in for full access</CardDescription>
+          <CardDescription>Enter your email below to login</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -78,7 +75,16 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>
+                      <div className="flex justify-between">
+                        <div>Password</div>
+                        <div>
+                          <a className="hover:underline" href="">
+                            Forgot your password?
+                          </a>
+                        </div>
+                      </div>
+                    </FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="*****" {...field} />
                     </FormControl>
@@ -87,16 +93,19 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button variant={"link"} type="button">
-                Register?
+              <Button className="w-full" type="submit">
+                Next
               </Button>
-              <Button type="submit">Next</Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter></CardFooter>
+        <CardFooter className="justify-center">
+          <span>Don&apos;t have an account?</span>
+          <Button className="underline" variant={"link"} type="button" asChild>
+            <Link to="/auth/register">Sign up</Link>
+          </Button>
+        </CardFooter>
       </Card>
-      <Button onClick={onTest}>Test Token</Button>
       <ShootingStars className="invisible dark:visible -z-10" />
       <StarsBackground className="invisible dark:visible -z-10" />
     </div>

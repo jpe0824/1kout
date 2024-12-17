@@ -4,6 +4,7 @@ from uuid import UUID
 from beanie.exceptions import RevisionIdWasChanged
 from fastapi import APIRouter, Body, Depends, HTTPException
 from pydantic.networks import EmailStr
+from pydantic import ValidationError
 from pymongo import errors
 
 from app.models import user_model
@@ -13,7 +14,7 @@ from app.api.deps.user_deps import get_current_active_user, get_current_active_s
 
 user_router = APIRouter()
 
-@user_router.post("", response_model=user_schema.User)
+@user_router.post("",operation_id="register_user", response_model=user_schema.User)
 async def register_user(
     password: str = Body(...),
     email: str = Body(...),
@@ -25,13 +26,18 @@ async def register_user(
     Register a new user.
     """
     hashed_password = get_password_hash(password)
-    user = user_model.User(
-        email=email,
-        hashed_password=hashed_password,
-        first_name=first_name,
-        last_name=last_name,
-        nick_name=nick_name
-    )
+    try:
+        user = user_model.User(
+            email=email,
+            hashed_password=hashed_password,
+            first_name=first_name,
+            last_name=last_name,
+            nick_name=nick_name
+        )
+    except ValidationError as exc:
+        raise HTTPException(
+            status_code=400, detail=f"{repr(exc.errors()[0]['msg'])}"
+        )
 
     try:
         await user.create()
@@ -42,7 +48,8 @@ async def register_user(
             status_code=400, detail="User with that email already exists."
         )
 
-@user_router.get("", response_model=list[user_schema.User])
+
+@user_router.get("", operation_id="get_users", response_model=list[user_schema.User])
 async def get_users(
     limit: int | None = 10,
     offset: int | None = 0,
@@ -56,7 +63,7 @@ async def get_users(
     users = await user_model.User.find_all().skip(offset).limit(limit).to_list()
     return users
 
-@user_router.get("/me", response_model=user_schema.User)
+@user_router.get("/me", operation_id="get_me", response_model=user_schema.User)
 async def get_profile(
     current_user: user_model.User = Depends(get_current_active_user),
 ) -> Any:
@@ -65,7 +72,7 @@ async def get_profile(
     """
     return current_user
 
-@user_router.patch("/me", response_model=user_schema.User)
+@user_router.patch("/me", operation_id="update_me", response_model=user_schema.User)
 async def update_profile(
     update: user_schema.UserUpdate,
     current_user: user_model.User = Depends(get_current_active_user),
@@ -91,8 +98,13 @@ async def update_profile(
         raise HTTPException(
             status_code=400, detail="User with that email already exists."
         )
+    except ValidationError:
+        print("got validation error")
+        raise HTTPException(
+            status_code=400, detail=f"Validation error: {ValidationError.errors}"
+        )
 
-@user_router.delete("/me", response_model=user_schema.User)
+@user_router.delete("/me", operation_id="delete_me", response_model=user_schema.User)
 async def delete_me(user: user_model.User = Depends(get_current_active_user)):
     """
     Delete current user.
@@ -100,7 +112,7 @@ async def delete_me(user: user_model.User = Depends(get_current_active_user)):
     await user.delete()
     return user
 
-@user_router.patch("/{userid}", response_model=user_schema.User)
+@user_router.patch("/{userid}", operation_id="update_user_by_id", response_model=user_schema.User)
 async def update_user(
     userid: UUID,
     update: user_schema.UserUpdate,
@@ -139,7 +151,7 @@ async def update_user(
             status_code=400, detail="User with that email already exists."
         )
 
-@user_router.get("/{userid}", response_model=user_schema.User)
+@user_router.get("/{userid}",operation_id="get_user_by_id", response_model=user_schema.User)
 async def get_user(
     userid: UUID, admin_user: user_model.User = Depends(get_current_active_superuser)
 ):
@@ -163,7 +175,7 @@ async def get_user(
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@user_router.delete("/{userid}", response_model=user_schema.User)
+@user_router.delete("/{userid}", operation_id="delete_user_by_id", response_model=user_schema.User)
 async def delete_user(
     userid: UUID, admin_user: user_model.User = Depends(get_current_active_superuser)
 ):

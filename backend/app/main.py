@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import certifi
+from fastapi.openapi.utils import get_openapi
 
 from app.core.config import settings
 from app.api.v1.routers import router
@@ -46,5 +47,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=settings.PROJECT_NAME,
+        version="0.0.1",
+        description="OpenAPI Schema for 1kOut",
+        routes=app.routes,
+    )
+    openapi_schema["servers"]= [
+        {
+            "url": f"http://localhost:8000"
+        }
+    ]
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 app.include_router(router, prefix=settings.API_V1_STR)

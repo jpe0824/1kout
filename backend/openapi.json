@@ -2,7 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "1kOutside",
-    "version": "0.1.0"
+    "description": "OpenAPI Schema for 1kOut",
+    "version": "0.0.1"
   },
   "paths": {
     "/api/v1/users": {
@@ -10,13 +11,13 @@
         "tags": ["users"],
         "summary": "Register User",
         "description": "Register a new user.",
-        "operationId": "register_user_api_v1_users_post",
+        "operationId": "register_user",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_register_user_api_v1_users_post"
+                "$ref": "#/components/schemas/Body_register_user"
               }
             }
           }
@@ -48,7 +49,7 @@
         "tags": ["users"],
         "summary": "Get Users",
         "description": "Get all users\n\n** Restricted to superuser **",
-        "operationId": "get_users_api_v1_users_get",
+        "operationId": "get_users",
         "security": [
           {
             "JWT": []
@@ -100,7 +101,7 @@
                   "items": {
                     "$ref": "#/components/schemas/User"
                   },
-                  "title": "Response Get Users Api V1 Users Get"
+                  "title": "Response Get Users"
                 }
               }
             }
@@ -123,7 +124,7 @@
         "tags": ["users"],
         "summary": "Get Profile",
         "description": "Get current user.",
-        "operationId": "get_profile_api_v1_users_me_get",
+        "operationId": "get_me",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -146,7 +147,7 @@
         "tags": ["users"],
         "summary": "Delete Me",
         "description": "Delete current user.",
-        "operationId": "delete_me_api_v1_users_me_delete",
+        "operationId": "delete_me",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -169,7 +170,7 @@
         "tags": ["users"],
         "summary": "Update Profile",
         "description": "Update current user",
-        "operationId": "update_profile_api_v1_users_me_patch",
+        "operationId": "update_me",
         "requestBody": {
           "content": {
             "application/json": {
@@ -214,7 +215,7 @@
         "tags": ["users"],
         "summary": "Update User",
         "description": "Update a user.\n\n** Restricted to superuser **\n\nParameters\n----------\nuserid : UUID\n    the user's UUID\nupdate : schemas.UserUpdate\n    the update data\ncurrent_user : models.User, optional\n    the current superuser, by default Depends(get_current_active_superuser)",
-        "operationId": "update_user_api_v1_users__userid__patch",
+        "operationId": "update_user_by_id",
         "security": [
           {
             "JWT": []
@@ -269,7 +270,7 @@
         "tags": ["users"],
         "summary": "Get User",
         "description": "Get User Info\n\n** Restricted to superuser **\n\nParameters\n----------\nuserid : UUID\n    the user's UUID\n\nReturns\n-------\nschemas.User\n    User info",
-        "operationId": "get_user_api_v1_users__userid__get",
+        "operationId": "get_user_by_id",
         "security": [
           {
             "JWT": []
@@ -314,7 +315,7 @@
         "tags": ["users"],
         "summary": "Delete User",
         "description": "Delete a user.\n\n** Restricted to superuser **",
-        "operationId": "delete_user_api_v1_users__userid__delete",
+        "operationId": "delete_user_by_id",
         "security": [
           {
             "JWT": []
@@ -360,12 +361,12 @@
       "post": {
         "tags": ["auth"],
         "summary": "Create access and refresh tokens for user",
-        "operationId": "login_api_v1_auth_login_post",
+        "operationId": "login",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/Body_login_api_v1_auth_login_post"
+                "$ref": "#/components/schemas/Body_login"
               }
             }
           },
@@ -399,7 +400,7 @@
       "post": {
         "tags": ["auth"],
         "summary": "Test if the access token is valid",
-        "operationId": "test_token_api_v1_auth_test_token_post",
+        "operationId": "test_token",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -423,7 +424,7 @@
       "post": {
         "tags": ["auth"],
         "summary": "Refresh token",
-        "operationId": "refresh_token_api_v1_auth_refresh_post",
+        "operationId": "refresh",
         "requestBody": {
           "content": {
             "application/json": {
@@ -462,7 +463,7 @@
   },
   "components": {
     "schemas": {
-      "Body_login_api_v1_auth_login_post": {
+      "Body_login": {
         "properties": {
           "grant_type": {
             "anyOf": [
@@ -514,9 +515,9 @@
         },
         "type": "object",
         "required": ["username", "password"],
-        "title": "Body_login_api_v1_auth_login_post"
+        "title": "Body_login"
       },
-      "Body_register_user_api_v1_users_post": {
+      "Body_register_user": {
         "properties": {
           "password": {
             "type": "string",
@@ -541,7 +542,7 @@
         },
         "type": "object",
         "required": ["password", "email"],
-        "title": "Body_register_user_api_v1_users_post"
+        "title": "Body_register_user"
       },
       "HTTPValidationError": {
         "properties": {
@@ -799,5 +800,10 @@
         }
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000"
+    }
+  ]
 }

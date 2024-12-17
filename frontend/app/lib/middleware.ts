@@ -11,10 +11,10 @@ export function middleware() {
   });
 
   client.interceptors.response.use(async (response, request, options) => {
-    console.log(`response intercepted: ${response.status}`);
+    if (response.status === 200) return response;
     if (response.status === 401) {
       await refreshAuth();
-      client.request.call(request.body, options);
+      client.request.call(request.body, options); //type issue, seems to be working ok atm
     }
     if (response.status === 403) {
       logout();

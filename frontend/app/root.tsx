@@ -12,6 +12,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import "./app.css";
 import { client } from "client";
 import { middleware } from "./lib/middleware";
+import { Toaster } from "./components/ui/toaster";
 
 client.setConfig({
   baseUrl: "http://localhost:8000",
@@ -29,7 +30,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <main>{children}</main>
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
