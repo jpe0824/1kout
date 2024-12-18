@@ -23,10 +23,10 @@ client.setConfig({
 export default function Home() {
   return (
     <div className="bg-light dark:bg-dark bg-cover bg-fixed bg-left lg:bg-center xl:bg-center 2xl:bg-center">
-      <div className="absolute top-0 right-0 m-5 z-10">
+      <div className="absolute top-0 right-0 m-5 z-40">
         <ThemeToggle />
       </div>
-      <div className="flex h-screen justify-center items-center z-40">
+      <div className="flex h-screen justify-center items-center">
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl md:text-7xl font-bold text-center mb-12">
             1,000 Hours
@@ -82,8 +82,6 @@ export default function Home() {
           </h1>
         </div>
       </div>
-      <ShootingStars className="invisible dark:visible -z-10" />
-      <StarsBackground className="invisible dark:visible -z-10" />
     </div>
   );
 }

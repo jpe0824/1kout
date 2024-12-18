@@ -23,13 +23,15 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { ShootingStars } from "@/components/ui/shooting-starts";
 import { StarsBackground } from "@/components/ui/stars-background";
-import { loginUser } from "@/lib/auth";
 import { BodyLogin } from "client";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/hooks/auth-provider";
 
 export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
+  const { loginUser } = useAuth();
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof zBody_login>>({
     resolver: zodResolver(zBody_login),
@@ -57,10 +59,15 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
+    <div className="flex justify-center items-center w-screen h-screen z-30">
       <Card className="m-2 p-4 w-96 lg:w-96">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
+          <CardTitle className="flex flex-row items-center">
+            <Button size="icon" variant="ghost" onClick={() => navigate(-1)}>
+              <ArrowLeft />
+            </Button>
+            Login
+          </CardTitle>
           <CardDescription>Enter your email below to login</CardDescription>
         </CardHeader>
         <CardContent>
@@ -116,8 +123,6 @@ export default function Login() {
           </Button>
         </CardFooter>
       </Card>
-      <ShootingStars className="invisible dark:visible -z-10" />
-      <StarsBackground className="invisible dark:visible -z-10" />
     </div>
   );
 }

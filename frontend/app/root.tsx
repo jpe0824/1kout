@@ -8,11 +8,20 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "./hooks/theme-provider";
 import "./app.css";
 import { client } from "client";
 import { middleware } from "./lib/middleware";
 import { Toaster } from "./components/ui/toaster";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "./components/ui/sidebar";
+import { AppSidebar } from "./components/app-sidebar";
+import { ShootingStars } from "./components/ui/shooting-starts";
+import { StarsBackground } from "./components/ui/stars-background";
+import { AuthProvider } from "./hooks/auth-provider";
 
 client.setConfig({
   baseUrl: "http://localhost:8000",
@@ -30,11 +39,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <main>{children}</main>
-        <Toaster />
-        <ScrollRestoration />
-        <Scripts />
+        <main>
+          <AuthProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <SidebarTrigger className="z-40 m-5 absolute" size="icon" />
+                {children}
+                <Toaster />
+              </SidebarInset>
+            </SidebarProvider>
+          </AuthProvider>
+        </main>
       </body>
+      <ScrollRestoration />
+      <Scripts />
+      <ShootingStars className="invisible dark:visible" />
+      <StarsBackground className="invisible dark:visible" />
     </html>
   );
 }

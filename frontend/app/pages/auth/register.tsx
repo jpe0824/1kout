@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ToastAction } from "@radix-ui/react-toast";
 import { BodyRegisterUser, registerUser } from "client";
 import { zBody_register_user } from "client/zod.gen";
+import { ArrowLeft } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -77,10 +78,15 @@ export default function RegisterUser() {
   }
 
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
+    <div className="flex justify-center items-center w-screen h-screen z-30">
       <Card className="m-2 p-4 w-96 lg:w-96">
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+          <CardTitle className="flex flex-row items-center">
+            <Button size="icon" variant="ghost" onClick={() => navigate(-1)}>
+              <ArrowLeft />
+            </Button>
+            Sign Up
+          </CardTitle>
           <CardDescription>
             Enter your information below to sign up
           </CardDescription>
@@ -168,8 +174,6 @@ export default function RegisterUser() {
         </CardContent>
         <CardFooter className="justify-center"></CardFooter>
       </Card>
-      <ShootingStars className="invisible dark:visible -z-10" />
-      <StarsBackground className="invisible dark:visible -z-10" />
     </div>
   );
 }
