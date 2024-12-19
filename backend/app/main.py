@@ -10,6 +10,7 @@ from fastapi.openapi.utils import get_openapi
 from app.core.config import settings
 from app.api.v1.routers import router
 from app.models.user_model import User
+from app.models.log_model import Log
 from app.core.security import get_password_hash
 
 @asynccontextmanager
@@ -19,7 +20,8 @@ async def lifespan(app: FastAPI):
     await init_beanie(
         database=db_client,
         document_models= [
-            User
+            User,
+            Log
         ]
     )
 

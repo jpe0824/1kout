@@ -41,7 +41,7 @@ export default function Login() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof zBody_login>) {
+  function onSubmit(values: z.infer<typeof zBody_login>) {
     setLoading(true);
     const loginData: BodyLogin = {
       username: values.username,
@@ -49,9 +49,8 @@ export default function Login() {
       grant_type: "password",
     };
     try {
-      await loginUser(loginData);
+      loginUser(loginData);
       setLoading(false);
-      navigate("/");
     } catch {
       setLoading(false);
       //err handled on auth.ts util

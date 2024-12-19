@@ -44,6 +44,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
             title: "Successfully logged in!",
           });
           testAuth();
+          navigate(-1)
         } else {
           throw res.error?.detail;
         }
