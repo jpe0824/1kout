@@ -52,7 +52,7 @@ export default function LogHistory() {
 
   return (
     <div className="flex justify-center items-center w-screen h-screen z-30">
-      <Card className="p-0 md:p-2 w-auto">
+      <Card className="p-0 md:p-2 max-w-screen md:w-auto ">
         <CardHeader>
           <CardTitle className="flex flex-row items-center">
             <Button size="icon" variant="ghost" onClick={() => navigate(-1)}>

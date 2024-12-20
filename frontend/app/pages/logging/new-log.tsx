@@ -35,10 +35,20 @@ import { format } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
-const formSchema = z.object({
-  start_time: z.date(),
-  end_time: z.date(),
-});
+const formSchema = z
+  .object({
+    start_time: z.date(),
+    end_time: z.date(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.start_time > data.end_time) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.invalid_date,
+        message: "Start time must be before end time.",
+        path: ["start_time"],
+      });
+    }
+  });
 
 export default function NewLog() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -59,6 +69,7 @@ export default function NewLog() {
     const stringDateStart = values.start_time
       .toISOString()
       .replace("Z", "+00:00");
+    console.log(stringDateStart);
     const stringDateEnd = values.end_time.toISOString().replace("Z", "+00:00");
     const createLogData: BodyCreateLog = {
       start_time: stringDateStart,
@@ -84,10 +95,10 @@ export default function NewLog() {
               <Button
                 onClick={() => {
                   if (err.response.status === 401) {
-                    console.log("error 401")
+                    console.log("error 401");
                   }
                   if (err.response.status === 403) {
-                    console.log("error 403")
+                    console.log("error 403");
                   }
                 }}
               >
@@ -163,7 +174,7 @@ export default function NewLog() {
                 name="end_time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Start Time</FormLabel>
+                    <FormLabel>End Time</FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -198,6 +209,7 @@ export default function NewLog() {
               <Button className="w-full" type="submit" disabled={loading}>
                 Next
               </Button>
+              <FormMessage />
             </form>
           </Form>
         </CardContent>

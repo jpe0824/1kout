@@ -104,7 +104,7 @@ function DatetimePicker({
       />
       <hr className="my-0" />
       <div className="px-2 mt-4 flex justify-between">
-        <div className="flex gap-2 items-center text-gray-700">
+        <div className="flex gap-2 items-center mr-2">
           <Clock className="h-5 w-5" />
           <p className="text-sm font-medium">Time</p>
         </div>

@@ -4,12 +4,13 @@ from beanie import Document, Indexed, Link
 from pydantic import Field
 from datetime import datetime, timedelta, date
 import pytz
+from pydantic import BaseModel
 from app.models.user_model import User
 
 class Log(Document):
     uuid: Annotated[UUID, Field(default_factory=uuid4), Indexed(unique=True)]
-    start_time: datetime = Field(default_factory=lambda: datetime.now(pytz.UTC))
-    end_time: datetime = Field(default_factory=lambda: datetime.now(pytz.UTC))
+    start_time: datetime = Field(default_factory=lambda: datetime.now())
+    end_time: datetime = Field(default_factory=lambda: datetime.now())
     owner: User = Link[User]
 
     @property
@@ -22,3 +23,9 @@ class Log(Document):
             Log.start_time >= date_from,
             Log.end_time <= date_to
         ).to_list()
+
+class LogHours(BaseModel):
+    uuid: UUID
+    start_time: datetime
+    end_time: datetime
+    hours: str

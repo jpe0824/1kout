@@ -58,7 +58,7 @@ async def create_log(
             status_code=400, detail="Unable to create log at this time."
         )
 
-@log_router.get("/", operation_id="got_logs", response_model=list[log_schema.Log])
+@log_router.get("/", operation_id="get_logs", response_model=list[log_schema.Log])
 async def get_logs(
     limit: int | None = 10,
     offset: int | None = 0,
@@ -71,6 +71,31 @@ async def get_logs(
     """
     logs = await log_model.Log.find(log_model.Log.owner.uuid == owner.uuid).skip(offset).limit(limit).to_list()
     return logs
+
+@log_router.get("/logs-hours", operation_id="get_logs_hours", response_model=list[log_schema.LogHours])
+async def get_logs(
+    limit: int | None = 10,
+    offset: int | None = 0,
+    owner: user_model.User = Depends(get_current_active_user)
+):
+    """
+    Get all logs for current user
+
+    ** Restricted to current user **
+    """
+    logs = await log_model.Log.find(log_model.Log.owner.uuid == owner.uuid).skip(offset).limit(limit).to_list()
+
+    log_hours_list = []
+    for log in logs:
+        log_hours = log_model.LogHours(
+            uuid=log.uuid,
+            start_time=log.start_time,
+            end_time=log.end_time,
+            hours=str(log.total_hours)
+        )
+        log_hours_list.append(log_hours)
+
+    return log_hours_list
 
 @log_router.get("/{logid}", operation_id="get_log_by_id", response_model=log_schema.Log)
 async def get_log(

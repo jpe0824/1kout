@@ -1,6 +1,7 @@
 from uuid import UUID
 from pydantic import BaseModel, Field
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from app.models.log_model import Log
 
 class LogBase(BaseModel):
     """
@@ -20,3 +21,6 @@ class Log(LogBase):
     Log properties returned by API
     """
     uuid: UUID
+
+class LogHours(Log):
+    hours: str

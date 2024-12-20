@@ -29,7 +29,11 @@ import { createSearchParams, useNavigate } from "react-router";
 const formatDate = (datestring: string) => {
   const date = new Date(datestring);
 
-  const localDate = new Date(date.getTime());
+  // Get the timezone offset in minutes and convert it to milliseconds
+  const timezoneOffset = date.getTimezoneOffset() * 60000;
+
+  // Adjust the date to the local timezone
+  const localDate = new Date(date.getTime() - timezoneOffset);
 
   const year = localDate.getFullYear();
   const month = localDate.getMonth() + 1; //getMonth() returns 0 based month
