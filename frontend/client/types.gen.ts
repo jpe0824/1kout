@@ -55,6 +55,10 @@ export type TokenSchema = {
   refresh_token: string;
 };
 
+export type TotalHours = {
+  hours: string;
+};
+
 /**
  * User properties returned by API. Contains private
  * user information such as email, is_active.
@@ -436,6 +440,23 @@ export type GetLogsHoursResponses = {
 
 export type GetLogsHoursResponse =
   GetLogsHoursResponses[keyof GetLogsHoursResponses];
+
+export type GetTotalHoursData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/v1/logs/hours-total";
+};
+
+export type GetTotalHoursResponses = {
+  /**
+   * Successful Response
+   */
+  200: TotalHours;
+};
+
+export type GetTotalHoursResponse =
+  GetTotalHoursResponses[keyof GetTotalHoursResponses];
 
 export type DeleteLogData = {
   body?: never;

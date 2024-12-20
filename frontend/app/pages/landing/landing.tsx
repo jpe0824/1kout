@@ -7,16 +7,33 @@ import {
 import { ShootingStars } from "@/components/ui/shooting-starts";
 import { StarsBackground } from "@/components/ui/stars-background";
 import { useAuth } from "@/hooks/auth-provider";
+import { formatTime, formatTimeToHours } from "@/lib/utils";
+import { getTotalHours, TotalHours } from "client";
 import Autoplay from "embla-carousel-autoplay";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Link } from "react-router";
 
 export function Landing() {
   const { user } = useAuth();
+  const [hours, setHours] = useState<TotalHours | null>(null);
+
+  const getHours = async () => {
+    if (!user) return;
+    await getTotalHours()
+      .then((res) => {
+        if (!res.response.ok || !res.data) throw res.error;
+        setHours(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
-    console.log("Change detected on main page", user);
+    getHours();
+  }, []);
+
+  useEffect(() => {
+    getHours();
   }, [user]);
 
   const plugin = React.useRef(
@@ -34,9 +51,20 @@ export function Landing() {
           </h1>
         </div>
         <div className="flex basis-1/12 justify-center items-center">
-          <h1 className="text-2xl md:text-4xl font-bold text-center">
-            Get Outside.
-          </h1>
+          {user ? (
+            <div className="flex flex-col text-center">
+              <h1 className="text-xl md:text-2xl font-semibold">
+                Hi {user.first_name || "there"}, you've spent
+              </h1>
+              <h1 className="font-pacifico text-3xl md:text-5xl font-bold my-4">
+                {formatTimeToHours(hours?.hours || "00:00:00")} hours outside!
+              </h1>
+            </div>
+          ) : (
+            <h1 className="text-2xl md:text-4xl font-bold text-center">
+              Get Outside.
+            </h1>
+          )}
         </div>
         <div className="flex basis-1/12 justify-center items-center bg-muted/25 lg:bg-transparent">
           <Carousel

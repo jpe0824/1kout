@@ -59,6 +59,10 @@ export const zTokenSchema = z.object({
   refresh_token: z.string(),
 });
 
+export const zTotalHours = z.object({
+  hours: z.string(),
+});
+
 export const zUser = z.object({
   first_name: z.unknown().optional(),
   last_name: z.unknown().optional(),

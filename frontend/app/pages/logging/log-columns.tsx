@@ -25,6 +25,7 @@ import { deleteLog, DeleteLogData, Log, LogHours } from "client";
 import { MoreHorizontal, Pencil, Trash, TriangleAlert } from "lucide-react";
 import { title } from "process";
 import { createSearchParams, useNavigate } from "react-router";
+import { formatTime } from "@/lib/utils";
 
 const formatDate = (datestring: string) => {
   const date = new Date(datestring);
@@ -48,17 +49,6 @@ const formatDate = (datestring: string) => {
 
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
   return `${month}/${day}  ${hours}:${formattedMinutes} ${ampm}`;
-};
-
-const formatTime = (time: string) => {
-  const parts = time.split(":");
-
-  const hours = parseInt(parts[0], 10);
-  const minutes = parseInt(parts[1], 10);
-
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}`;
 };
 
 export const columns: ColumnDef<LogHours>[] = [

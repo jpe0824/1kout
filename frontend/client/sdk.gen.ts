@@ -46,6 +46,8 @@ import type {
   GetLogsHoursData,
   GetLogsHoursError,
   GetLogsHoursResponse,
+  GetTotalHoursData,
+  GetTotalHoursResponse,
   DeleteLogData,
   DeleteLogError,
   GetLogByIdData,
@@ -412,7 +414,7 @@ export const getLogs = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Logs
+ * Get Logs Hours
  * Get all logs for current user
  *
  * ** Restricted to current user **
@@ -434,6 +436,29 @@ export const getLogsHours = <ThrowOnError extends boolean = false>(
       },
     ],
     url: "/api/v1/logs/logs-hours",
+  });
+};
+
+/**
+ * Get Hours
+ */
+export const getTotalHours = <ThrowOnError extends boolean = false>(
+  options?: Options<GetTotalHoursData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetTotalHoursResponse,
+    unknown,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs/hours-total",
   });
 };
 

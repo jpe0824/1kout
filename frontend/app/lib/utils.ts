@@ -34,3 +34,19 @@ export function useLocalStorage(keyName: string, defaultValue: string | null) {
 export function datetimeToIsoString(dt: string) {
   return dt.replace("+00:00", "Z");
 }
+
+export function formatTime(time: string) {
+  const parts = time.split(":");
+
+  const hours = parseInt(parts[0], 10);
+  const minutes = parseInt(parts[1], 10);
+
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}`;
+}
+
+export function formatTimeToHours(time: string) {
+  const parts = time.split(":");
+  return parts[0].padStart(1, "0");
+}
