@@ -2,6 +2,11 @@
 
 import { z } from "zod";
 
+export const zBody_create_log = z.object({
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+});
+
 export const zBody_login = z.object({
   grant_type: z.unknown().optional(),
   username: z.string(),
@@ -29,6 +34,24 @@ export const zHTTPValidationError = z.object({
       })
     )
     .optional(),
+});
+
+export const zLog = z.object({
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+  uuid: z.string().uuid(),
+});
+
+export const zLogHours = z.object({
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+  uuid: z.string().uuid(),
+  hours: z.string(),
+});
+
+export const zLogUpdate = z.object({
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
 });
 
 export const zTokenSchema = z.object({

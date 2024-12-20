@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import { toast } from "./use-toast";
 import { useLocalStorage } from "@/lib/utils";
 
@@ -44,7 +44,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
             title: "Successfully logged in!",
           });
           testAuth();
-          navigate(-1)
+          navigate(-1);
         } else {
           throw res.error?.detail;
         }
@@ -118,14 +118,4 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider");
 
   return context;
-};
-
-export const logUserOut = () => {
-  const auth = useAuth();
-  auth.logout();
-};
-
-export const refreshToken = () => {
-  const auth = useAuth();
-  auth.refreshAuth();
 };

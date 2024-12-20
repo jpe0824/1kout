@@ -30,3 +30,7 @@ export function useLocalStorage(keyName: string, defaultValue: string | null) {
   };
   return [storedValue, setValue];
 }
+
+export function datetimeToIsoString(dt: string) {
+  return dt.replace("+00:00", "Z");
+}

@@ -37,6 +37,23 @@ import type {
   RefreshData,
   RefreshError,
   RefreshResponse,
+  CreateLogData,
+  CreateLogError,
+  CreateLogResponse,
+  GetLogsData,
+  GetLogsError,
+  GetLogsResponse,
+  GetLogsHoursData,
+  GetLogsHoursError,
+  GetLogsHoursResponse,
+  DeleteLogData,
+  DeleteLogError,
+  GetLogByIdData,
+  GetLogByIdError,
+  GetLogByIdResponse,
+  EditLogData,
+  EditLogError,
+  EditLogResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -322,5 +339,210 @@ export const refresh = <ThrowOnError extends boolean = false>(
       ...options?.headers,
     },
     url: "/api/v1/auth/refresh",
+  });
+};
+
+/**
+ * Create Log
+ * Create new log for user.
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * start_time: datetime
+ * entered start datetime
+ *
+ * end_time: datetime
+ * entered end datetime
+ *
+ * Returns
+ * -------
+ * schemas.Log
+ * Log info
+ */
+export const createLog = <ThrowOnError extends boolean = false>(
+  options: Options<CreateLogData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateLogResponse,
+    CreateLogError,
+    ThrowOnError
+  >({
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs",
+  });
+};
+
+/**
+ * Get Logs
+ * Get all logs for current user
+ *
+ * ** Restricted to current user **
+ */
+export const getLogs = <ThrowOnError extends boolean = false>(
+  options?: Options<GetLogsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetLogsResponse,
+    GetLogsError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs/",
+  });
+};
+
+/**
+ * Get Logs
+ * Get all logs for current user
+ *
+ * ** Restricted to current user **
+ */
+export const getLogsHours = <ThrowOnError extends boolean = false>(
+  options?: Options<GetLogsHoursData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetLogsHoursResponse,
+    GetLogsHoursError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs/logs-hours",
+  });
+};
+
+/**
+ * Delete Log
+ * Delete a log.
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * logid: UUID
+ *
+ * Returns
+ * -------
+ * None
+ */
+export const deleteLog = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteLogData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    unknown,
+    DeleteLogError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs/{logid}",
+  });
+};
+
+/**
+ * Get Log
+ * Create new log for user.
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * logid: UUID
+ * The logs id
+ *
+ * Returns
+ * -------
+ * schemas.Log
+ * Log info
+ */
+export const getLogById = <ThrowOnError extends boolean = false>(
+  options: Options<GetLogByIdData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetLogByIdResponse,
+    GetLogByIdError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs/{logid}",
+  });
+};
+
+/**
+ * Edit Log
+ * Edit a log for user.
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * logid: UUID
+ * update: starttime, endtime
+ *
+ * Returns
+ * -------
+ * schemas.Log
+ * Log info
+ */
+export const editLog = <ThrowOnError extends boolean = false>(
+  options: Options<EditLogData, ThrowOnError>
+) => {
+  return (options?.client ?? client).patch<
+    EditLogResponse,
+    EditLogError,
+    ThrowOnError
+  >({
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/logs/{logid}",
   });
 };
