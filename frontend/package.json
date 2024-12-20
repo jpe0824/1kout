@@ -37,7 +37,7 @@
     "isbot": "^5.1.17",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
-    "react-day-picker": "^9.4.4",
+    "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.1",
     "react-router": "^7.0.2",
