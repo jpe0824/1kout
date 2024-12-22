@@ -14,7 +14,7 @@ from app.schemas import log_schema
 from app.models import leaderboard_model
 from app.schemas import leaderboard_schema
 from app.api.deps.user_deps import get_current_active_user
-from app.api.deps.leaderboard_deps import generate_unique_code
+from app.api.deps.leaderboard_deps import generate_unique_code, remove_user_from_array
 
 leaderboard_router = APIRouter()
 
@@ -67,6 +67,10 @@ async def get_owned_leaderboards(
     Get all leaderboards for current user
 
     ** Restricted to current user **
+
+    Returns
+    -------
+    list schema.Leaderboard
     """
     leaderboards = await leaderboard_model.Leaderboard.find(leaderboard_model.Leaderboard.owner.uuid == owner.uuid, fetch_links=True).to_list()
     return leaderboards
@@ -81,6 +85,10 @@ async def get_joined_leaderboards(
     Get all leaderboards for current user
 
     ** Restricted to current user **
+
+    Returns
+    -------
+    list schema.Leaderboard
     """
     leaderboards = await leaderboard_model.Leaderboard.find(leaderboard_model.Leaderboard.users.uuid == owner.uuid, fetch_links=True).to_list()
     return leaderboards
@@ -90,6 +98,20 @@ async def add_user(
     invite_code: str,
     owner: user_model.User = Depends(get_current_active_user)
 ):
+    """
+    Add a user to a leaderboard
+
+    ** Restricted to current user **
+
+    Parameters
+    ----------
+    invite_code: str
+        the unique invite code for a leaderboard
+
+    Returns
+    -------
+    schemas.Leaderboard
+    """
     leaderboard = await leaderboard_model.Leaderboard.find_one(leaderboard_model.Leaderboard.invite_code == invite_code)
     if leaderboard is None:
         raise HTTPException(status_code=404, detail="Log not found")
@@ -104,11 +126,100 @@ async def add_user(
             status_code=400, detail=f"Validation error: {ValidationError.errors}"
         )
 
+@leaderboard_router.patch("/remove", operation_id="remove_user", response_model=leaderboard_schema.Leaderboard)
+async def remove_user(
+    leaderboardId: UUID,
+    userId: UUID,
+    owner: user_model.User = Depends(get_current_active_user)
+):
+    """
+    Remove a user from leaderboard
+
+    ** Restricted to leaderboard owner **
+
+    Parameters
+    ----------
+    leaderboardId: UUID,
+    userId: UUID
+
+    Returns
+    -------
+    schemas.Leaderboard
+    """
+    leaderboard: leaderboard_model.Leaderboard = await leaderboard_model.Leaderboard.find_one(leaderboard_model.Leaderboard.uuid == leaderboardId, fetch_links=True)
+
+    leaderboard_users = leaderboard.users
+    removed, updated_users = remove_user_from_array(leaderboard_users, userId)
+
+    if removed is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    leaderboard.users = updated_users
+
+    try:
+        await leaderboard.save()
+        return leaderboard
+    except ValidationError:
+        raise HTTPException(
+            status_code=400, detail=f"Validation error: {ValidationError.errors}"
+        )
+
+
+@leaderboard_router.patch("/remove/me", operation_id="remove_me", response_model=leaderboard_schema.Leaderboard)
+async def remove_me(
+    leaderboardId: UUID,
+    owner: user_model.User = Depends(get_current_active_user)
+):
+    """
+    Remove self from leaderboard
+
+    ** Restricted to current user **
+
+    Parameters
+    ----------
+    leaderboardId: UUID,
+
+    Returns
+    -------
+    schemas.Leaderboard
+    """
+    leaderboard: leaderboard_model.Leaderboard = await leaderboard_model.Leaderboard.find_one(leaderboard_model.Leaderboard.uuid == leaderboardId, fetch_links=True)
+
+    print(leaderboard)
+    leaderboard_users = leaderboard.users
+    removed, updated_users = remove_user_from_array(leaderboard_users, owner.uuid)
+
+    if removed is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    leaderboard.users = updated_users
+
+    try:
+        await leaderboard.save()
+        return leaderboard
+    except ValidationError:
+        raise HTTPException(
+            status_code=400, detail=f"Validation error: {ValidationError.errors}"
+        )
+
 @leaderboard_router.get("/{leaderboardId}", operation_id="get_leaderboard_data", response_model=list[user_schema.PublicUser])
 async def get_leaderboard_data(
     leaderboardId: UUID,
     owner: user_model.User = Depends(get_current_active_user)
 ):
+    """
+    Get a leaderboard users data by it's ID
+
+    ** Restricted to current user **
+
+    Parameters
+    ----------
+    leaderboardId: UUID
+
+    Returns
+    -------
+    list schema.PublicUser
+    """
     leaderboard: leaderboard_model.Leaderboard = await leaderboard_model.Leaderboard.find_one(leaderboard_model.Leaderboard.uuid == leaderboardId, fetch_links=True)
 
     leaderboard_list = []
@@ -130,6 +241,65 @@ async def get_leaderboard_data(
 
     return leaderboard_list
 
+@leaderboard_router.patch("/{leaderboardId}", operation_id="edit_leaderboard", response_model=leaderboard_schema.Leaderboard)
+async def edit_leaderboard(
+    leaderboardId: UUID,
+    update: leaderboard_schema.LeaderboardUpdate,
+    owner: user_model.User = Depends(get_current_active_user)
+):
+    """
+    Edit a leaderboard
 
+    ** Restricted to current user/owner of leaderboard **
 
-### TODO - build calls for delete/edit/remove
+    Parameters
+    ----------
+    leaderboardId: UUID
+    update: leaderboard_name, is_active, picture, invite_code
+
+    Returns
+    -------
+    schemas.Leaderboard
+    """
+
+    leaderboard = await leaderboard_model.Leaderboard.find_one(leaderboard_model.Leaderboard.uuid == leaderboardId, leaderboard_model.Leaderboard.owner.uuid == owner.id)
+    if leaderboard is None:
+        raise HTTPException(status_code=404, detail="Leaderboard not found.")
+
+    update_data = update.model_dump(exclude_unset=True)
+    leaderboard = leaderboard.model_copy(update=update_data)
+
+    try:
+        await leaderboard.save()
+        return leaderboard
+    except ValidationError:
+        raise HTTPException(
+            status_code=400, detail=f"Validation error: {ValidationError.errors}"
+        )
+
+@leaderboard_router.delete("/{leaderboardId}", operation_id="delete_leaderboard", response_model=None)
+async def delete_leaderboard(
+    leaderboardId: UUID,
+    owner: user_model.User = Depends(get_current_active_user)
+):
+    """
+    Delete a leaderboard.
+
+    ** Restricted to current user **
+
+    Parameters
+    ----------
+    leaderboardId: UUID
+
+    Returns
+    -------
+    None
+    """
+    leaderboard = await leaderboard_model.Leaderboard.find_one(leaderboard_model.Leaderboard.uuid == leaderboardId, leaderboard_model.Leaderboard.owner.uuid == owner.uuid)
+    if leaderboard is None:
+        raise HTTPException(status_code=404, detail="Leaderboard not found.")
+
+    await leaderboard.delete()
+    return None
+
+### TODO - build calls for /remove

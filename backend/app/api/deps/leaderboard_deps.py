@@ -1,4 +1,5 @@
 import uuid
+from app.models.user_model import User
 
 def generate_unique_code():
     random_uuid = uuid.uuid4()
@@ -10,3 +11,17 @@ def generate_unique_code():
     referral_code = clean_uuid[:8]
 
     return referral_code
+
+def remove_user_from_array(arr: list[User], target: str):
+    # Find the index of the object with the matching UUID
+    try:
+        idx = next(i for i, obj in enumerate(arr) if obj.uuid == target)
+    except StopIteration:
+        # If no object is found, return None and the original array
+        return None, arr
+
+    #Remove the object from the array
+    removed_object = arr.pop(idx)
+
+    # Return the removed object and the updated array
+    return removed_object, arr
