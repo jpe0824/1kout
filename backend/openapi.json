@@ -583,7 +583,7 @@
     "/api/v1/logs/logs-hours": {
       "get": {
         "tags": ["logs"],
-        "summary": "Get Logs",
+        "summary": "Get Logs Hours",
         "description": "Get all logs for current user\n\n** Restricted to current user **",
         "operationId": "get_logs_hours",
         "security": [
@@ -653,6 +653,30 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/logs/hours-total": {
+      "get": {
+        "tags": ["logs"],
+        "summary": "Get Hours",
+        "operationId": "get_total_hours",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalHours"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/api/v1/logs/{logid}": {
@@ -995,6 +1019,17 @@
         "type": "object",
         "required": ["access_token", "refresh_token"],
         "title": "TokenSchema"
+      },
+      "TotalHours": {
+        "properties": {
+          "hours": {
+            "type": "string",
+            "title": "Hours"
+          }
+        },
+        "type": "object",
+        "required": ["hours"],
+        "title": "TotalHours"
       },
       "User": {
         "properties": {

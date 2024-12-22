@@ -44,3 +44,9 @@ class User(PrivateUserBase):
     """
 
     uuid: UUID
+
+class PublicUser(UserBase):
+    """
+    Shared user properties and
+    """
+    hours: str

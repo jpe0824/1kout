@@ -29,3 +29,6 @@ class LogHours(BaseModel):
     start_time: datetime
     end_time: datetime
     hours: str
+
+class Hours(BaseModel):
+    hours: str

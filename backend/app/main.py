@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.api.v1.routers import router
 from app.models.user_model import User
 from app.models.log_model import Log
+from app.models.leaderboard_model import Leaderboard
 from app.core.security import get_password_hash
 
 @asynccontextmanager
@@ -21,7 +22,8 @@ async def lifespan(app: FastAPI):
         database=db_client,
         document_models= [
             User,
-            Log
+            Log,
+            Leaderboard
         ]
     )
 

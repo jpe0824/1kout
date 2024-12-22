@@ -24,3 +24,6 @@ class Log(LogBase):
 
 class LogHours(Log):
     hours: str
+
+class TotalHours(BaseModel):
+    hours: str

@@ -1,6 +1,6 @@
 from typing import Any
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from beanie.exceptions import RevisionIdWasChanged
 from fastapi import APIRouter, Body, Depends, HTTPException
@@ -73,7 +73,7 @@ async def get_logs(
     return logs
 
 @log_router.get("/logs-hours", operation_id="get_logs_hours", response_model=list[log_schema.LogHours])
-async def get_logs(
+async def get_logs_hours(
     limit: int | None = 10,
     offset: int | None = 0,
     owner: user_model.User = Depends(get_current_active_user)
@@ -96,6 +96,21 @@ async def get_logs(
         log_hours_list.append(log_hours)
 
     return log_hours_list
+
+@log_router.get("/hours-total", operation_id="get_total_hours", response_model =log_schema.TotalHours)
+async def get_hours(
+    owner: user_model.User = Depends(get_current_active_user)
+):
+    logs = await log_model.Log.find(log_model.Log.owner.uuid == owner.uuid).to_list()
+
+    total_hours = timedelta(hours=0)
+    for log in logs:
+        total_hours += log.total_hours
+
+    hours = log_schema.TotalHours(
+        hours=str(total_hours)
+    )
+    return hours
 
 @log_router.get("/{logid}", operation_id="get_log_by_id", response_model=log_schema.Log)
 async def get_log(
