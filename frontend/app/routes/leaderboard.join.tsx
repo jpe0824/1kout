@@ -1,5 +1,6 @@
+import JoinBoard from "@/pages/leaderboard/join-board";
 import React from "react";
 
-export default function Leaderboard() {
-  return <div>Leaderboard</div>;
+export default function LeaderboardJoin() {
+  return <JoinBoard />;
 }

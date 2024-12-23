@@ -47,6 +47,6 @@ class User(PrivateUserBase):
 
 class PublicUser(UserBase):
     """
-    Shared user properties and
+    Shared user properties and hours
     """
     hours: str

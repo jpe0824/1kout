@@ -21,6 +21,7 @@ leaderboard_router = APIRouter()
 @leaderboard_router.post("", operation_id="create_leaderboard", response_model=leaderboard_schema.Leaderboard)
 async def create_leaderboard(
     leaderboard_name: str = Body(...),
+    picture: str = Body(None),
     owner: user_model.User = Depends(get_current_active_user)
 ):
     """
@@ -39,9 +40,7 @@ async def create_leaderboard(
     try:
         leaderboard = leaderboard_model.Leaderboard(
             leaderboard_name=leaderboard_name,
-            picture=None,
-            is_active=True,
-            invite_code=generate_unique_code(),
+            picture=picture,
             owner=owner
         )
     except ValidationError as exc:
@@ -202,7 +201,7 @@ async def remove_me(
             status_code=400, detail=f"Validation error: {ValidationError.errors}"
         )
 
-@leaderboard_router.get("/{leaderboardId}", operation_id="get_leaderboard_data", response_model=list[user_schema.PublicUser])
+@leaderboard_router.get("/{leaderboardId}", operation_id="get_leaderboard_data", response_model=leaderboard_schema.LeaderboardData)
 async def get_leaderboard_data(
     leaderboardId: UUID,
     owner: user_model.User = Depends(get_current_active_user)
@@ -239,7 +238,16 @@ async def get_leaderboard_data(
 
         leaderboard_list.append(public_user)
 
-    return leaderboard_list
+    leaderboard_data = leaderboard_schema.LeaderboardData(
+        leaderboard_name=leaderboard.leaderboard_name,
+        picture=leaderboard.picture,
+        is_active=leaderboard.is_active,
+        invite_code=leaderboard.invite_code,
+        uuid=leaderboard.uuid,
+        users_data=leaderboard_list
+    )
+
+    return leaderboard_data
 
 @leaderboard_router.patch("/{leaderboardId}", operation_id="edit_leaderboard", response_model=leaderboard_schema.Leaderboard)
 async def edit_leaderboard(

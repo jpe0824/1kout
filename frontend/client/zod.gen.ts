@@ -2,6 +2,11 @@
 
 import { z } from "zod";
 
+export const zBody_create_leaderboard = z.object({
+  leaderboard_name: z.string(),
+  picture: z.string().optional(),
+});
+
 export const zBody_create_log = z.object({
   start_time: z.string().datetime(),
   end_time: z.string().datetime(),
@@ -36,6 +41,38 @@ export const zHTTPValidationError = z.object({
     .optional(),
 });
 
+export const zLeaderboard = z.object({
+  leaderboard_name: z.unknown().optional(),
+  picture: z.unknown().optional(),
+  is_active: z.unknown().optional(),
+  invite_code: z.string(),
+  uuid: z.string().uuid(),
+});
+
+export const zLeaderboardData = z.object({
+  leaderboard_name: z.unknown().optional(),
+  picture: z.unknown().optional(),
+  is_active: z.unknown().optional(),
+  invite_code: z.string(),
+  uuid: z.string().uuid(),
+  users_data: z.array(
+    z.object({
+      first_name: z.unknown().optional(),
+      last_name: z.unknown().optional(),
+      nick_name: z.unknown().optional(),
+      picture: z.unknown().optional(),
+      hours: z.string(),
+    })
+  ),
+});
+
+export const zLeaderboardUpdate = z.object({
+  leaderboard_name: z.unknown().optional(),
+  picture: z.unknown().optional(),
+  is_active: z.unknown().optional(),
+  invite_code: z.unknown().optional(),
+});
+
 export const zLog = z.object({
   start_time: z.string().datetime(),
   end_time: z.string().datetime(),
@@ -52,6 +89,14 @@ export const zLogHours = z.object({
 export const zLogUpdate = z.object({
   start_time: z.string().datetime(),
   end_time: z.string().datetime(),
+});
+
+export const zPublicUser = z.object({
+  first_name: z.unknown().optional(),
+  last_name: z.unknown().optional(),
+  nick_name: z.unknown().optional(),
+  picture: z.unknown().optional(),
+  hours: z.string(),
 });
 
 export const zTokenSchema = z.object({

@@ -1,4 +1,7 @@
 from uuid import UUID
+from typing import List
+
+from app.schemas.user_schema import PublicUser
 
 from pydantic import BaseModel, Field
 
@@ -22,3 +25,5 @@ class LeaderboardUpdate(LeaderboardBase):
 class Leaderboard(PrivateLeaderboardBase):
     uuid: UUID
 
+class LeaderboardData(Leaderboard):
+    users_data: list[PublicUser]

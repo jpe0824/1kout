@@ -27,11 +27,18 @@ import { NavMain } from "@/components/nav-main";
 import { Link } from "react-router";
 import { NavUser } from "@/components/nav-user";
 import { useEffect, useState } from "react";
-import { User } from "client";
+import {
+  getJoinedLeaderboards,
+  getOwnedLeaderboards,
+  Leaderboard,
+  User,
+} from "client";
 import { useAuth } from "@/hooks/auth-provider";
+import useLeaderboards from "@/hooks/use-leaderboard";
+import { NavLeaderboard } from "./nav-leaderboard";
 
 const data = {
-  navMain: [
+  navLogging: [
     {
       title: "Hours",
       url: "/logging",
@@ -48,15 +55,14 @@ const data = {
         },
       ],
     },
+  ],
+  navLeaderboard: [
     {
       title: "Leaderboard",
       url: "/leaderboard",
       icon: ListOrdered,
+      isActive: true,
       items: [
-        {
-          title: "Leaderboard",
-          url: "/leaderboard",
-        },
         {
           title: "Create New",
           url: "/leaderboard/create",
@@ -89,8 +95,11 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
+      <SidebarContent className="">
+        <SidebarGroup>
+          <NavMain items={data.navLogging} />
+          <NavLeaderboard items={data.navLeaderboard} />
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

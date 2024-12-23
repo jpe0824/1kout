@@ -7,8 +7,8 @@ def generate_unique_code():
     uuid_str = str(random_uuid)
     # Remove hyphens and convert to uppercase
     clean_uuid = uuid_str.replace('-', '').upper()
-    # Take the first 8 characters (assuming 8-character codes are desired)
-    referral_code = clean_uuid[:8]
+    # Take the first 6 characters (assuming 6-character codes are desired)
+    referral_code = clean_uuid[:6]
 
     return referral_code
 

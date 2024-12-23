@@ -1,23 +1,23 @@
-import { ChevronRight, type LucideIcon } from "lucide-react";
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import useLeaderboards from "@/hooks/use-leaderboard";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar";
+} from "./ui/sidebar";
+import { useState } from "react";
 import { Link } from "react-router";
+import {
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
+import { Collapsible } from "./ui/collapsible";
+import { ChevronRight, LucideIcon } from "lucide-react";
 
-export function NavMain({
+export function NavLeaderboard({
   items,
 }: {
   items: {
@@ -31,6 +31,8 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const { leaderboards } = useLeaderboards();
+
   return (
     <SidebarMenu>
       {items.map((item) => (
@@ -57,6 +59,17 @@ export function NavMain({
                         <span>{subItem.title}</span>
                       </Link>
                     </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                ))}
+              </SidebarMenuSub>
+              <SidebarMenuSub>
+                {leaderboards.map((board) => (
+                  <SidebarMenuSubItem key={board.uuid}>
+                    <SidebarMenuButton asChild>
+                      <Link to={`/leaderboard/${board.uuid}`}>
+                        {board.leaderboard_name}
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuSubItem>
                 ))}
               </SidebarMenuSub>

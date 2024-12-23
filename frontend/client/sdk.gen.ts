@@ -56,6 +56,32 @@ import type {
   EditLogData,
   EditLogError,
   EditLogResponse,
+  CreateLeaderboardData,
+  CreateLeaderboardError,
+  CreateLeaderboardResponse,
+  GetOwnedLeaderboardsData,
+  GetOwnedLeaderboardsError,
+  GetOwnedLeaderboardsResponse,
+  GetJoinedLeaderboardsData,
+  GetJoinedLeaderboardsError,
+  GetJoinedLeaderboardsResponse,
+  AddUserData,
+  AddUserError,
+  AddUserResponse,
+  RemoveUserData,
+  RemoveUserError,
+  RemoveUserResponse,
+  RemoveMeData,
+  RemoveMeError,
+  RemoveMeResponse,
+  DeleteLeaderboardData,
+  DeleteLeaderboardError,
+  GetLeaderboardDataData,
+  GetLeaderboardDataError,
+  GetLeaderboardDataResponse,
+  EditLeaderboardData,
+  EditLeaderboardError,
+  EditLeaderboardResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -569,5 +595,314 @@ export const editLog = <ThrowOnError extends boolean = false>(
       },
     ],
     url: "/api/v1/logs/{logid}",
+  });
+};
+
+/**
+ * Create Leaderboard
+ * Creates a new leaderboard
+ *
+ * ** Restricted to current and logged in user**
+ *
+ * Parameters
+ * ----------
+ * leaderboard_name: str, unique
+ *
+ * Returns
+ * -------
+ * schemas.Leaderboard
+ */
+export const createLeaderboard = <ThrowOnError extends boolean = false>(
+  options: Options<CreateLeaderboardData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateLeaderboardResponse,
+    CreateLeaderboardError,
+    ThrowOnError
+  >({
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards",
+  });
+};
+
+/**
+ * Get Owned Leaderboards
+ * Get all leaderboards for current user
+ *
+ * ** Restricted to current user **
+ *
+ * Returns
+ * -------
+ * list schema.Leaderboard
+ */
+export const getOwnedLeaderboards = <ThrowOnError extends boolean = false>(
+  options?: Options<GetOwnedLeaderboardsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetOwnedLeaderboardsResponse,
+    GetOwnedLeaderboardsError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/owned",
+  });
+};
+
+/**
+ * Get Joined Leaderboards
+ * Get all leaderboards for current user
+ *
+ * ** Restricted to current user **
+ *
+ * Returns
+ * -------
+ * list schema.Leaderboard
+ */
+export const getJoinedLeaderboards = <ThrowOnError extends boolean = false>(
+  options?: Options<GetJoinedLeaderboardsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetJoinedLeaderboardsResponse,
+    GetJoinedLeaderboardsError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/joined",
+  });
+};
+
+/**
+ * Add User
+ * Add a user to a leaderboard
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * invite_code: str
+ * the unique invite code for a leaderboard
+ *
+ * Returns
+ * -------
+ * schemas.Leaderboard
+ */
+export const addUser = <ThrowOnError extends boolean = false>(
+  options: Options<AddUserData, ThrowOnError>
+) => {
+  return (options?.client ?? client).patch<
+    AddUserResponse,
+    AddUserError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/add",
+  });
+};
+
+/**
+ * Remove User
+ * Remove a user from leaderboard
+ *
+ * ** Restricted to leaderboard owner **
+ *
+ * Parameters
+ * ----------
+ * leaderboardId: UUID,
+ * userId: UUID
+ *
+ * Returns
+ * -------
+ * schemas.Leaderboard
+ */
+export const removeUser = <ThrowOnError extends boolean = false>(
+  options: Options<RemoveUserData, ThrowOnError>
+) => {
+  return (options?.client ?? client).patch<
+    RemoveUserResponse,
+    RemoveUserError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/remove",
+  });
+};
+
+/**
+ * Remove Me
+ * Remove self from leaderboard
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * leaderboardId: UUID,
+ *
+ * Returns
+ * -------
+ * schemas.Leaderboard
+ */
+export const removeMe = <ThrowOnError extends boolean = false>(
+  options: Options<RemoveMeData, ThrowOnError>
+) => {
+  return (options?.client ?? client).patch<
+    RemoveMeResponse,
+    RemoveMeError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/remove/me",
+  });
+};
+
+/**
+ * Delete Leaderboard
+ * Delete a leaderboard.
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * leaderboardId: UUID
+ *
+ * Returns
+ * -------
+ * None
+ */
+export const deleteLeaderboard = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteLeaderboardData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    unknown,
+    DeleteLeaderboardError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/{leaderboardId}",
+  });
+};
+
+/**
+ * Get Leaderboard Data
+ * Get a leaderboard users data by it's ID
+ *
+ * ** Restricted to current user **
+ *
+ * Parameters
+ * ----------
+ * leaderboardId: UUID
+ *
+ * Returns
+ * -------
+ * list schema.PublicUser
+ */
+export const getLeaderboardData = <ThrowOnError extends boolean = false>(
+  options: Options<GetLeaderboardDataData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetLeaderboardDataResponse,
+    GetLeaderboardDataError,
+    ThrowOnError
+  >({
+    ...options,
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/{leaderboardId}",
+  });
+};
+
+/**
+ * Edit Leaderboard
+ * Edit a leaderboard
+ *
+ * ** Restricted to current user/owner of leaderboard **
+ *
+ * Parameters
+ * ----------
+ * leaderboardId: UUID
+ * update: leaderboard_name, is_active, picture, invite_code
+ *
+ * Returns
+ * -------
+ * schemas.Leaderboard
+ */
+export const editLeaderboard = <ThrowOnError extends boolean = false>(
+  options: Options<EditLeaderboardData, ThrowOnError>
+) => {
+  return (options?.client ?? client).patch<
+    EditLeaderboardResponse,
+    EditLeaderboardError,
+    ThrowOnError
+  >({
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+    security: [
+      {
+        fn: "accessToken",
+        in: "header",
+        name: "Authorization",
+      },
+    ],
+    url: "/api/v1/leaderboards/{leaderboardId}",
   });
 };
