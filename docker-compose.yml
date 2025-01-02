@@ -5,11 +5,8 @@ services:
     restart: always
     build:
       context: ./backend
-    # command: uvicorn app.main:app --host 0.0.0.0 --port 80
-    # volumes:
-    #   - ./backend:/app
-    # ports:
-    #   - 80:80
+    ports:
+      - 8000:8000
 
   frontend:
     restart: always
@@ -17,3 +14,5 @@ services:
       context: ./frontend
       args:
         - NODE_ENV=production
+    ports:
+      - 3000:3000
