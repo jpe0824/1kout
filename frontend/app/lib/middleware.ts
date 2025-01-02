@@ -1,4 +1,3 @@
-import { toast } from "@/hooks/use-toast";
 import { client } from "client";
 
 export function middleware() {
@@ -14,17 +13,18 @@ export function middleware() {
     if (response.ok) {
       return response;
     } else {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-      });
-      return response;
+      // toast({
+      //   variant: "destructive",
+      //   title: "Uh oh! Something went wrong.",
+      // });
+      // return response;
     }
     if (response.status === 401) {
-      // logUserOut();
+      // logout();
       // client.request.call(request.body, options); //type issue, seems to be working ok atm
     }
     if (response.status === 403) {
+      // logout();
     }
     return response;
   });

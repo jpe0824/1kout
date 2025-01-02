@@ -1,4 +1,4 @@
-import { BodyLogin, login, refresh, testToken, User } from "client";
+import { BodyLogin, client, login, refresh, testToken, User } from "client";
 import React, {
   createContext,
   useContext,
@@ -6,9 +6,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { redirect, useNavigate } from "react-router";
+import { redirect, replace, useNavigate } from "react-router";
 import { toast } from "./use-toast";
 import { useLocalStorage } from "@/lib/utils";
+import { optional } from "zod";
+import useLeaderboards from "./use-leaderboard";
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -44,7 +46,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
             title: "Successfully logged in!",
           });
           testAuth();
-          navigate(-1);
+          navigate("/", { replace: true });
         } else {
           throw res.error?.detail;
         }
@@ -92,6 +94,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     navigate("/auth/login", { replace: true });
+    navigate(0);
   }
 
   const value = useMemo(

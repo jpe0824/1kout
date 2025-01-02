@@ -51,7 +51,7 @@ const formSchema = z.object({
 export default function EditLog() {
   const [loading, setLoading] = useState<boolean>(true);
   const [logId, setLogId] = useState<string>("");
-  const { user } = useAuth();
+  const { user, logout, refreshAuth } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [log, setLog] = useState<Log | null>(null);
@@ -70,11 +70,29 @@ export default function EditLog() {
         setLog(res.data);
       })
       .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh, something went wrong!",
-          description: `${err}`,
-        });
+        // if (err.response.status === 403) {
+        //   console.log("error 403");
+        //   logout();
+        // }
+        // toast({
+        //   variant: "destructive",
+        //   title: "Uh oh! Something went wrong.",
+        //   description: `${err.error.detail}`,
+        //   action: (
+        //     <ToastAction altText="Try again">
+        //       <Button
+        //         onClick={() => {
+        //           if (err.response.status === 401) {
+        //             console.log("error 401");
+        //             refreshAuth();
+        //           }
+        //         }}
+        //       >
+        //         Try again
+        //       </Button>
+        //     </ToastAction>
+        //   ),
+        // });
       });
     setLoading(false);
   }, [logId]);

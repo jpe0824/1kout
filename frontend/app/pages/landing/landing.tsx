@@ -12,8 +12,6 @@ import { getTotalHours, TotalHours } from "client";
 import Autoplay from "embla-carousel-autoplay";
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router";
-
 export function Landing() {
   const { user } = useAuth();
   const [hours, setHours] = useState<TotalHours | null>(null);
@@ -27,10 +25,6 @@ export function Landing() {
       })
       .catch((err) => console.log(err));
   };
-
-  useEffect(() => {
-    getHours();
-  }, []);
 
   useEffect(() => {
     getHours();

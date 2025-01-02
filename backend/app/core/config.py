@@ -22,6 +22,7 @@ class Settings(BaseSettings):
 
     FIRST_SUPERUSER: EmailStr = config("FIRST_SUPERUSER", cast=str)
     FIRST_SUPERUSER_PASSWORD: str = config("FIRST_SUPERUSER_PASSWORD", cast=str)
+    FIRST_SUPERUSER_NICKNAME: str = config("FIRST_SUPERUSER_NICKNAME", cast=str)
 
     class Config:
         case_sensitive = True

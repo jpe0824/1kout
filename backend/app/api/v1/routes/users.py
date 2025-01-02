@@ -18,9 +18,9 @@ user_router = APIRouter()
 async def register_user(
     password: str = Body(...),
     email: str = Body(...),
+    nick_name: str = Body(...),
     first_name: str = Body(None),
-    last_name: str = Body(None),
-    nick_name: str = Body(None)
+    last_name: str = Body(None)
 ):
     """
     Register a new user.

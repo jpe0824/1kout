@@ -11,7 +11,7 @@ import type { Route } from "./+types/root";
 import { ThemeProvider } from "./hooks/theme-provider";
 import "./app.css";
 import { client } from "client";
-import { middleware } from "./lib/middleware";
+// import { middleware } from "./lib/middleware";
 import { Toaster } from "./components/ui/toaster";
 import {
   SidebarInset,
@@ -22,6 +22,7 @@ import { AppSidebar } from "./components/app-sidebar";
 import { ShootingStars } from "./components/ui/shooting-starts";
 import { StarsBackground } from "./components/ui/stars-background";
 import { AuthProvider } from "./hooks/auth-provider";
+import { middleware } from "./lib/middleware";
 
 client.setConfig({
   baseUrl: "http://localhost:8000",
@@ -30,7 +31,6 @@ client.setConfig({
 middleware();
 
 export function Layout({ children }: { children: React.ReactNode }) {
-
   return (
     <html lang="en">
       <head>

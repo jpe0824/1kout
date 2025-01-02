@@ -19,7 +19,7 @@ import { DataTable } from "@/components/data-table";
 import { columns } from "@/pages/logging/log-columns";
 
 export default function LogHistory() {
-  const { user } = useAuth();
+  const { user, logout, refreshAuth } = useAuth();
   const navigate = useNavigate();
   const [logs, setLogs] = useState<LogHours[]>([]);
 
@@ -33,12 +33,29 @@ export default function LogHistory() {
         }
       })
       .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: `${err}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        // if (err.response.status === 403) {
+        //   console.log("error 403");
+        //   logout();
+        // }
+        // toast({
+        //   variant: "destructive",
+        //   title: "Uh oh! Something went wrong.",
+        //   description: `${err.error.detail}`,
+        //   action: (
+        //     <ToastAction altText="Try again">
+        //       <Button
+        //         onClick={() => {
+        //           if (err.response.status === 401) {
+        //             console.log("error 401");
+        //             refreshAuth();
+        //           }
+        //         }}
+        //       >
+        //         Try again
+        //       </Button>
+        //     </ToastAction>
+        //   ),
+        // });
       });
   };
 

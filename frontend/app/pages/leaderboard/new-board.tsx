@@ -35,7 +35,7 @@ export default function NewBoard() {
   const [loading, setLoading] = useState<boolean>(false);
   const [join, setJoin] = useState<boolean>(true);
   const [inviteCode, setInviteCode] = useState<string>();
-  const { user } = useAuth();
+  const { user, logout, refreshAuth } = useAuth();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof zBody_create_leaderboard>>({
@@ -64,27 +64,29 @@ export default function NewBoard() {
         }
       })
       .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: `${err.error.detail}`,
-          action: (
-            <ToastAction altText="Try again">
-              <Button
-                onClick={() => {
-                  if (err.response.status === 401) {
-                    console.log("error 401");
-                  }
-                  if (err.response.status === 403) {
-                    console.log("error 403");
-                  }
-                }}
-              >
-                Try again
-              </Button>
-            </ToastAction>
-          ),
-        });
+        // if (err.response.status === 403) {
+        //   console.log("error 403");
+        //   logout();
+        // }
+        // toast({
+        //   variant: "destructive",
+        //   title: "Uh oh! Something went wrong.",
+        //   description: `${err.error.detail}`,
+        //   action: (
+        //     <ToastAction altText="Try again">
+        //       <Button
+        //         onClick={() => {
+        //           if (err.response.status === 401) {
+        //             console.log("error 401");
+        //             refreshAuth();
+        //           }
+        //         }}
+        //       >
+        //         Try again
+        //       </Button>
+        //     </ToastAction>
+        //   ),
+        // });
       });
     setLoading(false);
   }
@@ -94,7 +96,9 @@ export default function NewBoard() {
     addUser({ query: { invite_code: inviteCode } })
       .then((res) => {
         if (!res.response.ok) throw res.error?.detail;
-        toast({ title: "Successfully created and added you to new leaderboard!" });
+        toast({
+          title: "Successfully created and added you to new leaderboard!",
+        });
         navigate("/leaderboard"); // navigate to dynamic route for leaderboard
       })
       .catch((err) => {

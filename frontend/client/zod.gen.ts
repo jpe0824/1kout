@@ -24,9 +24,9 @@ export const zBody_login = z.object({
 export const zBody_register_user = z.object({
   password: z.string(),
   email: z.string(),
+  nick_name: z.string(),
   first_name: z.string().optional(),
   last_name: z.string().optional(),
-  nick_name: z.string().optional(),
 });
 
 export const zHTTPValidationError = z.object({

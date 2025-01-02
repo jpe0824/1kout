@@ -33,6 +33,7 @@ async def lifespan(app: FastAPI):
             email=settings.FIRST_SUPERUSER,
             hashed_password=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
             is_superuser=True,
+            nick_name=settings.FIRST_SUPERUSER_NICKNAME
         )
         await user.create()
 

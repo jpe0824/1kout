@@ -22,9 +22,9 @@ export type BodyLogin = {
 export type BodyRegisterUser = {
   password: string;
   email: string;
+  nick_name: string;
   first_name?: string;
   last_name?: string;
-  nick_name?: string;
 };
 
 export type HttpValidationError = {

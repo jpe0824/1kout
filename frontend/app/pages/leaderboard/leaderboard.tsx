@@ -1,11 +1,7 @@
 import { useAuth } from "@/hooks/auth-provider";
 import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
-import {
-  getLeaderboardData,
-  Leaderboard,
-  PublicUser,
-} from "client";
+import { getLeaderboardData, Leaderboard, PublicUser } from "client";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import NotAuthorized from "../auth/not-authorized";
@@ -26,7 +22,7 @@ import { PopoverContent } from "@radix-ui/react-popover";
 
 export default function Leaderboard() {
   let { uuid } = useParams();
-  const { user } = useAuth();
+  const { user, logout, refreshAuth } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<PublicUser[]>([]);
   const [leaderboard, setLeaderboard] = useState<Leaderboard>();
@@ -46,12 +42,29 @@ export default function Leaderboard() {
         setUsers(res.data.users_data);
       })
       .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: `${err}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        // if (err.response.status === 403) {
+        //   console.log("error 403");
+        //   logout();
+        // }
+        // toast({
+        //   variant: "destructive",
+        //   title: "Uh oh! Something went wrong.",
+        //   description: `${err}`,
+        //   action: (
+        //     <ToastAction altText="Try again">
+        //       <Button
+        //         onClick={() => {
+        //           if (err.response.status === 401) {
+        //             console.log("error 401");
+        //             refreshAuth();
+        //           }
+        //         }}
+        //       >
+        //         Try again
+        //       </Button>
+        //     </ToastAction>
+        //   ),
+        // });
       });
   };
 

@@ -1413,6 +1413,10 @@
             "type": "string",
             "title": "Email"
           },
+          "nick_name": {
+            "type": "string",
+            "title": "Nick Name"
+          },
           "first_name": {
             "type": "string",
             "title": "First Name"
@@ -1420,14 +1424,10 @@
           "last_name": {
             "type": "string",
             "title": "Last Name"
-          },
-          "nick_name": {
-            "type": "string",
-            "title": "Nick Name"
           }
         },
         "type": "object",
-        "required": ["password", "email"],
+        "required": ["password", "email", "nick_name"],
         "title": "Body_register_user"
       },
       "HTTPValidationError": {

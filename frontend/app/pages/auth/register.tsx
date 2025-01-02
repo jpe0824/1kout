@@ -127,7 +127,7 @@ export default function RegisterUser() {
                 name="nick_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nickname</FormLabel>
+                    <FormLabel>Nickname*</FormLabel>
                     <FormControl>
                       <Input placeholder="Bob" {...field} />
                     </FormControl>

@@ -115,6 +115,10 @@ async def add_user(
     if leaderboard is None:
         raise HTTPException(status_code=404, detail="Log not found")
 
+    for user in leaderboard.users:
+        if user.uuid == owner.uuid:
+            raise HTTPException(status_code=400, detail="User already added to this leaderboard.")
+
     leaderboard.users.append(owner)
 
     try:
