@@ -64,7 +64,7 @@ def custom_openapi():
     )
     openapi_schema["servers"]= [
         {
-            "url": f"http://localhost:8000"
+            "url": f"http://0.0.0.0:8000"
         }
     ]
 

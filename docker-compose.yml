@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  backend:
+    restart: always
+    build:
+      context: ./backend
+    # command: uvicorn app.main:app --host 0.0.0.0 --port 80
+    # volumes:
+    #   - ./backend:/app
+    # ports:
+    #   - 80:80
+
+  frontend:
+    restart: always
+    build:
+      context: ./frontend
+      args:
+        - NODE_ENV=production
