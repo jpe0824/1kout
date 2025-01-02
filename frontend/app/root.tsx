@@ -25,7 +25,7 @@ import { AuthProvider } from "./hooks/auth-provider";
 import { middleware } from "./lib/middleware";
 
 client.setConfig({
-  baseUrl: "http://localhost:8000",
+  baseUrl: "http://0.0.0.0:8000",
 });
 
 middleware();
