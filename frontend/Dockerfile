@@ -1,3 +1,4 @@
+# Stage 0, build
 FROM node:20-alpine AS development-dependencies-env
 COPY . /app
 WORKDIR /app
@@ -14,9 +15,10 @@ COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
 RUN npm run build
 
-FROM node:20-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
-WORKDIR /app
-CMD ["npm", "run", "start"]
+# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
+FROM nginx:1
+
+COPY --from=build-env /app/build/client /usr/share/nginx/html
+
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx-backend-not-found.conf /etc/nginx/extra-conf.d/backend-not-found.conf

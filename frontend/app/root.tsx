@@ -1,3 +1,5 @@
+"use client";
+
 import {
   isRouteErrorResponse,
   Links,
@@ -24,13 +26,14 @@ import { StarsBackground } from "./components/ui/stars-background";
 import { AuthProvider } from "./hooks/auth-provider";
 import { middleware } from "./lib/middleware";
 
-client.setConfig({
-  baseUrl: "https://api.1khours.com",
-});
-
-middleware();
-
 export function Layout({ children }: { children: React.ReactNode }) {
+  const baseURL = import.meta.env.VITE_API_URL;
+  client.setConfig({
+    baseUrl: baseURL,
+  });
+
+  middleware();
+
   return (
     <html lang="en">
       <head>
@@ -40,23 +43,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <main>
-          <AuthProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset>
-                <SidebarTrigger className="z-40 m-5 absolute" size="icon" />
-                {children}
-                <Toaster />
-              </SidebarInset>
-            </SidebarProvider>
-          </AuthProvider>
-        </main>
+        <AuthProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <SidebarTrigger className="z-40 m-5 absolute" size="icon" />
+              {children}
+              <ShootingStars className="invisible dark:visible" />
+              <StarsBackground className="invisible dark:visible" />
+              <Toaster />
+            </SidebarInset>
+          </SidebarProvider>
+        </AuthProvider>
+        <Scripts />
+        <ScrollRestoration />
       </body>
-      <ScrollRestoration />
-      <Scripts />
-      <ShootingStars className="invisible dark:visible" />
-      <StarsBackground className="invisible dark:visible" />
     </html>
   );
 }

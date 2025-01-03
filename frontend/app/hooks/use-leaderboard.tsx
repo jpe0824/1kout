@@ -15,6 +15,7 @@ const useLeaderboards = () => {
   const { user, logout, refreshAuth } = useAuth();
 
   const getJoinedBoards = async () => {
+    if (!user) return;
     await getJoinedLeaderboards()
       .then((res) => {
         if (!res.response.ok) throw res.error?.detail;
@@ -50,6 +51,7 @@ const useLeaderboards = () => {
   };
 
   const getOwnedBoards = async () => {
+    if (!user) return;
     await getOwnedLeaderboards()
       .then((res) => {
         if (!res.response.ok) throw res.error?.detail;
