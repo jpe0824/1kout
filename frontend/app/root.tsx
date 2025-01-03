@@ -25,7 +25,7 @@ import { AuthProvider } from "./hooks/auth-provider";
 import { middleware } from "./lib/middleware";
 
 client.setConfig({
-  baseUrl: "http://api.1khours.com",
+  baseUrl: "https://api.1khours.com",
 });
 
 middleware();
