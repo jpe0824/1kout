@@ -64,7 +64,13 @@ def custom_openapi():
     )
     openapi_schema["servers"]= [
         {
-            "url": f"http://api.1khours.com"
+            "url": f"http://api.1khours.com",
+        },
+        {
+            "url": f"http://0.0.0.0:8000"
+        },
+        {
+            "url": f"http://10.0.0.154:8000"
         }
     ]
 
