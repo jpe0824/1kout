@@ -24,38 +24,21 @@ export default function LogHistory() {
   const [logs, setLogs] = useState<LogHours[]>([]);
 
   const getLogHistory = async () => {
+    if (!user) return
     await getLogsHours()
       .then((res) => {
-        if (res.response.ok) {
-          if (res.data) setLogs(res.data);
-        } else {
-          throw res.error?.detail;
+        if (res.response.status === 401) {
+          refreshAuth();
+          getLogHistory();
         }
+        if (res.response.status === 403) {
+          logout();
+        }
+        if (!res.response.ok || !res.data) throw res.error;
+        setLogs(res.data);
       })
       .catch((err) => {
-        // if (err.response.status === 403) {
-        //   console.log("error 403");
-        //   logout();
-        // }
-        // toast({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description: `${err.error.detail}`,
-        //   action: (
-        //     <ToastAction altText="Try again">
-        //       <Button
-        //         onClick={() => {
-        //           if (err.response.status === 401) {
-        //             console.log("error 401");
-        //             refreshAuth();
-        //           }
-        //         }}
-        //       >
-        //         Try again
-        //       </Button>
-        //     </ToastAction>
-        //   ),
-        // });
+        throw err;
       });
   };
 

@@ -63,16 +63,11 @@ export default function RegisterUser() {
           });
           navigate("/auth/login");
         } else {
-          throw res.error?.detail;
+          throw res.error;
         }
       })
       .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: `${err}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        throw err
       });
     setLoading(false);
   }

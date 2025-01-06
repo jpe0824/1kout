@@ -52,7 +52,14 @@ export default function NewBoard() {
     createLeaderboard({ body: values })
       .then((res) => {
         if (res.response.ok) {
-          if (!res.data) throw res.error.detail;
+          if (res.response.status === 401) {
+            refreshAuth();
+            onSubmit(values);
+          }
+          if (res.response.status === 403) {
+            logout();
+          }
+          if (!res.data) throw res.error;
           if (join) {
             setInviteCode(res.data.invite_code); //Join leaderboard called if set
           } else {
@@ -64,29 +71,7 @@ export default function NewBoard() {
         }
       })
       .catch((err) => {
-        // if (err.response.status === 403) {
-        //   console.log("error 403");
-        //   logout();
-        // }
-        // toast({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description: `${err.error.detail}`,
-        //   action: (
-        //     <ToastAction altText="Try again">
-        //       <Button
-        //         onClick={() => {
-        //           if (err.response.status === 401) {
-        //             console.log("error 401");
-        //             refreshAuth();
-        //           }
-        //         }}
-        //       >
-        //         Try again
-        //       </Button>
-        //     </ToastAction>
-        //   ),
-        // });
+        throw err
       });
     setLoading(false);
   }

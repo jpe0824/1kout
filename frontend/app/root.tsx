@@ -23,8 +23,9 @@ import {
 import { AppSidebar } from "./components/app-sidebar";
 import { ShootingStars } from "./components/ui/shooting-starts";
 import { StarsBackground } from "./components/ui/stars-background";
-import { AuthProvider } from "./hooks/auth-provider";
-import { middleware } from "./lib/middleware";
+import { AuthProvider, useAuth } from "./hooks/auth-provider";
+import { toast } from "./hooks/use-toast";
+import { useMiddleware } from "./lib/middleware";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const baseURL = import.meta.env.VITE_API_URL;
@@ -32,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     baseUrl: baseURL,
   });
 
-  middleware();
+  useMiddleware();
 
   return (
     <html lang="en">

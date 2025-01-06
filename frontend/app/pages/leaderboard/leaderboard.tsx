@@ -30,7 +30,14 @@ export default function Leaderboard() {
   const getLeaderboard = async () => {
     await getLeaderboardData({ path: { leaderboardId: uuid || "" } })
       .then((res) => {
-        if (!res.response.ok || !res.data) throw res.error?.detail;
+        if (res.response.status === 401) {
+          refreshAuth();
+          getLeaderboard();
+        }
+        if (res.response.status === 403) {
+          logout();
+        }
+        if (!res.response.ok || !res.data) throw res.error;
         const leaderboardResData: Leaderboard = {
           leaderboard_name: res.data.leaderboard_name,
           picture: res.data.picture,
@@ -42,29 +49,7 @@ export default function Leaderboard() {
         setUsers(res.data.users_data);
       })
       .catch((err) => {
-        // if (err.response.status === 403) {
-        //   console.log("error 403");
-        //   logout();
-        // }
-        // toast({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description: `${err}`,
-        //   action: (
-        //     <ToastAction altText="Try again">
-        //       <Button
-        //         onClick={() => {
-        //           if (err.response.status === 401) {
-        //             console.log("error 401");
-        //             refreshAuth();
-        //           }
-        //         }}
-        //       >
-        //         Try again
-        //       </Button>
-        //     </ToastAction>
-        //   ),
-        // });
+        throw err;
       });
   };
 

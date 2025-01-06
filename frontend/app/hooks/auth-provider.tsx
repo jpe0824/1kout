@@ -18,6 +18,7 @@ type AuthProviderProps = {
 
 interface AuthContextState {
   user: User | null;
+  refreshTryAgain: boolean;
   loginUser: (loginData: BodyLogin) => void;
   logout: () => void;
   refreshAuth: () => void;
@@ -25,15 +26,21 @@ interface AuthContextState {
 
 const initialState = {
   user: null,
+  refreshTryAgain: true,
   loginUser: (loginData: BodyLogin) => {},
-  logout: () => {},
-  refreshAuth: () => {},
+  logout: () => {
+    console.log("logout not set");
+  },
+  refreshAuth: () => {
+    console.log("refresh not set");
+  },
 };
 
 const AuthContext = createContext<AuthContextState>(initialState);
 
 export function AuthProvider({ children, ...props }: AuthProviderProps) {
   const [user, setUser] = useLocalStorage("user", null);
+  const [refreshTryAgain, setRefreshTryAgain] = useState(true);
   const navigate = useNavigate();
 
   async function loginUser(loginData: BodyLogin): Promise<void> {
@@ -46,40 +53,6 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
             title: "Successfully logged in!",
           });
           testAuth();
-          navigate("/", { replace: true });
-        } else {
-          throw res.error?.detail;
-        }
-      })
-      .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: `${err}`,
-        });
-        throw err;
-      });
-  }
-
-  async function testAuth(): Promise<void> {
-    await testToken()
-      .then((res) => {
-        if (res.data) {
-          setUser(res.data);
-        }
-        return;
-      })
-      .catch((err) => {
-        console.log("token not valid");
-      });
-  }
-
-  async function refreshAuth() {
-    await refresh({ body: `${localStorage.getItem("refresh_token")}` })
-      .then((res) => {
-        if (res.response.ok && res.data) {
-          localStorage.setItem("access_token", res.data.access_token);
-          localStorage.setItem("refresh_token", res.data.refresh_token);
         } else {
           throw res.error;
         }
@@ -89,7 +62,44 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
       });
   }
 
+  async function testAuth(): Promise<void> {
+    await testToken()
+      .then((res) => {
+        if (!res.response.ok) throw res.error;
+        if (res.data) {
+          setUser(res.data);
+          navigate("/");
+        }
+        return;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  async function refreshAuth() {
+    if (!refreshTryAgain) return;
+    const refreshToken = localStorage.getItem("refresh_token");
+    if (!refreshToken) logout();
+    else {
+      await refresh({ body: refreshToken })
+        .then((res) => {
+          if (res.response.ok && res.data) {
+            localStorage.setItem("access_token", res.data.access_token);
+            localStorage.setItem("refresh_token", res.data.refresh_token);
+          } else {
+            throw res.error;
+          }
+        })
+        .catch((err) => {
+          logout();
+          throw err;
+        });
+    }
+  }
+
   function logout() {
+    console.log("running logout");
     setUser(null);
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -100,11 +110,12 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
   const value = useMemo(
     () => ({
       user,
+      refreshTryAgain,
       loginUser,
       refreshAuth,
       logout,
     }),
-    [user]
+    [user, refreshTryAgain]
   );
 
   return (

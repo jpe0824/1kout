@@ -55,8 +55,15 @@ export default function JoinBoard() {
 
     addUser({ query: values })
       .then((res) => {
+        if (res.response.status === 401) {
+          refreshAuth();
+          onSubmit(values)
+        }
+        if (res.response.status === 403) {
+          logout();
+        }
         if (res.response.ok) {
-          if (!res.data) throw res.error.detail;
+          if (!res.data) throw res.error;
 
           toast({ title: "Successfully added to leaderboard!" });
           navigate("/leaderboard"); // navigate to dynamic route for leaderboard

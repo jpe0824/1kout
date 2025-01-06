@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function EditBoard() {
-  return (
-    <div>EditBoard</div>
-  )
+  return <div>EditBoard</div>;
 }
