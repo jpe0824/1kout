@@ -1,6 +1,10 @@
+import { useAuth } from "@/hooks/auth-provider";
+import { toast } from "@/hooks/use-toast";
 import { client } from "client";
 
-export function middleware() {
+export function useMiddleware() {
+  const { user } = useAuth();
+
   client.interceptors.request.use((request, options) => {
     request.headers.set(
       "Authorization",
@@ -9,23 +13,22 @@ export function middleware() {
     return request;
   });
 
-  client.interceptors.response.use(async (response, request, options) => {
-    if (response.ok) {
-      return response;
+  client.interceptors.error.use(async (error: any) => {
+    if (!user) return;
+    console.error(error);
+    if (!error.detail) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+      });
     } else {
-      // toast({
-      //   variant: "destructive",
-      //   title: "Uh oh! Something went wrong.",
-      // });
-      // return response;
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `${error.detail}`,
+      });
     }
-    if (response.status === 401) {
-      // logout();
-      // client.request.call(request.body, options); //type issue, seems to be working ok atm
-    }
-    if (response.status === 403) {
-      // logout();
-    }
-    return response;
+
+    return error;
   });
 }

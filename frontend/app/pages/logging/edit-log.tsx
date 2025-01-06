@@ -66,33 +66,18 @@ export default function EditLog() {
     if (!logId) return;
     getLogById({ path: { logid: logId } })
       .then((res) => {
-        if (!res.response.ok || !res.data) throw res.error?.detail;
+        if (res.response.status === 401) {
+          refreshAuth();
+          getLogById({ path: { logid: logId } });
+        }
+        if (res.response.status === 403) {
+          logout();
+        }
+        if (!res.response.ok || !res.data) throw res.error;
         setLog(res.data);
       })
       .catch((err) => {
-        // if (err.response.status === 403) {
-        //   console.log("error 403");
-        //   logout();
-        // }
-        // toast({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description: `${err.error.detail}`,
-        //   action: (
-        //     <ToastAction altText="Try again">
-        //       <Button
-        //         onClick={() => {
-        //           if (err.response.status === 401) {
-        //             console.log("error 401");
-        //             refreshAuth();
-        //           }
-        //         }}
-        //       >
-        //         Try again
-        //       </Button>
-        //     </ToastAction>
-        //   ),
-        // });
+        throw err;
       });
     setLoading(false);
   }, [logId]);

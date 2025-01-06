@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
@@ -15,17 +15,26 @@ import Autoplay from "embla-carousel-autoplay";
 import React, { useEffect, useState } from "react";
 
 export function Landing() {
-  const { user } = useAuth();
+  const { user, refreshAuth, logout } = useAuth();
   const [hours, setHours] = useState<TotalHours | null>(null);
 
   const getHours = async () => {
     if (!user) return;
     await getTotalHours()
       .then((res) => {
+        if (res.response.status === 401) {
+          refreshAuth();
+          getHours();
+        }
+        if (res.response.status === 403) {
+          logout();
+        }
         if (!res.response.ok || !res.data) throw res.error;
         setHours(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        throw err;
+      });
   };
 
   useEffect(() => {

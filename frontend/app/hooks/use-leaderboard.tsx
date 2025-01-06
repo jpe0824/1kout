@@ -12,41 +12,29 @@ import { Button } from "@/components/ui/button";
 const useLeaderboards = () => {
   const [leaderboards, setLeaderboards] = useState<Leaderboard[]>([]);
   const [ownedLeaderboards, setOwnedLeaderboards] = useState<Leaderboard[]>([]);
-  const { user, logout, refreshAuth } = useAuth();
+  const { user, refreshTryAgain, refreshAuth, logout } = useAuth();
 
   const getJoinedBoards = async () => {
     if (!user) return;
     await getJoinedLeaderboards()
       .then((res) => {
-        if (!res.response.ok) throw res.error?.detail;
+        if (res.response.status === 401) {
+          if (refreshTryAgain) {
+            refreshAuth();
+            getJoinedLeaderboards();
+          }
+
+        }
+        if (res.response.status === 403) {
+          logout();
+        }
+        if (!res.response.ok || !res.data) throw res.error;
+        if (!res.response.ok) throw res.error;
         if (!res.data) return;
         setLeaderboards(res.data);
       })
       .catch((err) => {
-        console.error("Error fetching joined leaderboards:", err);
-        // if (err.response.status === 403) {
-        //   console.log("error 403");
-        //   logout();
-        // }
-        // toast({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description: `${err.error.detail}`,
-        //   action: (
-        //     <ToastAction altText="Try again">
-        //       <Button
-        //         onClick={() => {
-        //           if (err.response.status === 401) {
-        //             console.log("error 401");
-        //             refreshAuth();
-        //           }
-        //         }}
-        //       >
-        //         Try again
-        //       </Button>
-        //     </ToastAction>
-        //   ),
-        // });
+        throw err;
       });
   };
 
@@ -54,12 +42,12 @@ const useLeaderboards = () => {
     if (!user) return;
     await getOwnedLeaderboards()
       .then((res) => {
-        if (!res.response.ok) throw res.error?.detail;
+        if (!res.response.ok) throw res.error;
         if (!res.data) return;
         setOwnedLeaderboards(res.data);
       })
       .catch((err) => {
-        console.error("Error fetching joined leaderboards:", err);
+        throw err;
       });
   };
 
