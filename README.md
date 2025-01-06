@@ -21,7 +21,7 @@ For production use the base url domain of the backend
 
 ## Deployment via Docker
 ```sh
-docker compose up --build -d
+docker compose -f docker-compose.yml up --build -d
 ```
 
 ## Development via Docker
@@ -65,7 +65,9 @@ docker compose logs backend
 Development:
 Backend - [text](http://0.0.0.0:8000)
 Backend Docs - [text](http://0.0.0.0:8000/docs)
-
 Frontend - [text](http://localhost:5173/)
 
 Staging:
+Backend Docs - [text](https://staging-api.1khours.com/docs)
+Frontend - [text](https://staging.1khours.com/)
+
