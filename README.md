@@ -10,6 +10,9 @@ MONGO_CONNECTION_STRING=mongodb+srv://{user}:{password}@cluster0.wfq6k8m.mongodb
 FIRST_SUPERUSER={email}
 FIRST_SUPERUSER_PASSWORD={password}
 FIRST_SUPERUSER_NICKNAME={name}
+# Generate these keys using import secrets, secrets.token_urlsafe(32)
+SECRET_KEY={key}
+REFRESH_SECRET_KEY={key}
 ```
 
 Frontend:
