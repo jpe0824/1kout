@@ -15,7 +15,7 @@ bcrypt==4.2.1
     # via -r backend/requirements.in
 beanie==1.29.0
     # via -r backend/requirements.in
-certifi==2024.8.30
+certifi==2024.12.14
     # via
     #   -r backend/requirements.in
     #   httpcore
