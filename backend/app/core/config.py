@@ -7,8 +7,8 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
-    SECRET_KEY: str = secrets.token_urlsafe(32)
-    REFRESH_SECRET_KEY: str = secrets.token_urlsafe(32)
+    SECRET_KEY: str = config("SECRET_KEY", cast=str)
+    REFRESH_SECRET_KEY: str = config("REFRESH_SECRET_KEY", cast=str)
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8   # 8 days
