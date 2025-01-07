@@ -78,7 +78,7 @@ pyasn1==0.6.1
     # via
     #   python-jose
     #   rsa
-pydantic==2.10.3
+pydantic==2.10.4
     # via
     #   -r backend/requirements.in
     #   beanie
@@ -86,7 +86,7 @@ pydantic==2.10.3
     #   lazy-model
     #   pydantic-extra-types
     #   pydantic-settings
-pydantic-core==2.27.1
+pydantic-core==2.27.2
     # via pydantic
 pydantic-extra-types==2.10.1
     # via fastapi
