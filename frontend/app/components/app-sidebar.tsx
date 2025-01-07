@@ -53,6 +53,10 @@ const data = {
           title: "New Log",
           url: "/logging/new-log",
         },
+        {
+          title: "Log Timer",
+          url: "/logging/timer",
+        },
       ],
     },
   ],
