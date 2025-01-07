@@ -148,7 +148,7 @@ typing-extensions==4.12.2
     #   typer
 ujson==5.10.0
     # via fastapi
-uvicorn[standard]==0.32.1
+uvicorn[standard]==0.34.0
     # via
     #   -r backend/requirements.in
     #   fastapi
