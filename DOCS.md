@@ -1,0 +1,5 @@
+- Fastapi Docs: https://fastapi.tiangolo.com/docs/
+- React Docs: https://react.dev/
+- React Router Docs: https://reactrouter.com/en/main/start/overview
+- Shadcn Docs: https://ui.shadcn.com/docs
+- heyapi openapi: https://heyapi.dev/openapi-ts/clients/fetch

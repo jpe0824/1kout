@@ -10,14 +10,14 @@ services:
       - run
       - --reload
       - "app/main.py"
-    develop:
-      watch:
-        - path: ./backend
-          action: sync
-          target: /app
-          ignore:
-            - ./backend/.venv
-            - .venv
+    # develop:
+    #   watch:
+    #     - path: ./backend
+    #       action: sync
+    #       target: /app
+    #       ignore:
+    #         - ./backend/.venv
+    #         - .venv
 
   frontend:
     restart: "no"

@@ -66,11 +66,11 @@ docker compose logs backend
 ## URLs
 
 Development:
-Backend - [text](http://0.0.0.0:8000)
-Backend Docs - [text](http://0.0.0.0:8000/docs)
-Frontend - [text](http://localhost:5173/)
+Backend - [link](http://0.0.0.0:8000)
+Backend Docs - [link](http://0.0.0.0:8000/docs)
+Frontend - [link](http://localhost:5173/)
 
 Staging:
-Backend Docs - [text](https://staging-api.1khours.com/docs)
-Frontend - [text](https://staging.1khours.com/)
+Backend Docs - [link](https://staging-api.1khours.com/docs)
+Frontend - [link](https://staging.1khours.com/)
 
