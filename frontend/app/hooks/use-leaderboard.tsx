@@ -51,6 +51,11 @@ const useLeaderboards = () => {
       });
   };
 
+  const resetLeaderboards = () => {
+    setLeaderboards([]);
+    setOwnedLeaderboards([]);
+  };
+
   useEffect(() => {
     getJoinedBoards();
     getOwnedBoards();
@@ -59,9 +64,10 @@ const useLeaderboards = () => {
   useEffect(() => {
     getJoinedBoards();
     getOwnedBoards();
+
   }, [user]);
 
-  return { leaderboards, ownedLeaderboards, getJoinedBoards, getOwnedBoards };
+  return { leaderboards, ownedLeaderboards, getJoinedBoards, getOwnedBoards, resetLeaderboards };
 };
 
 export default useLeaderboards;

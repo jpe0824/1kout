@@ -2,6 +2,7 @@ import useLeaderboards from "@/hooks/use-leaderboard";
 import {
   SidebarGroup,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -15,7 +16,14 @@ import {
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
 import { Collapsible } from "./ui/collapsible";
-import { ChevronRight, LucideIcon } from "lucide-react";
+import { ChevronRight, LucideIcon, MoreHorizontal } from "lucide-react";
+import { useAuth } from "@/hooks/auth-provider";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "./ui/dropdown-menu";
 
 export function NavLeaderboard({
   items,
@@ -31,7 +39,8 @@ export function NavLeaderboard({
     }[];
   }[];
 }) {
-  const { leaderboards } = useLeaderboards();
+  const { user } = useAuth();
+  const { leaderboards, ownedLeaderboards } = useLeaderboards();
 
   return (
     <SidebarMenu>
@@ -53,24 +62,47 @@ export function NavLeaderboard({
             <CollapsibleContent>
               <SidebarMenuSub>
                 {item.items?.map((subItem) => (
-                  <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton asChild>
-                      <Link to={subItem.url ?? "/"}>
-                        <span>{subItem.title}</span>
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
+                  <>
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton asChild>
+                        <Link to={subItem.url ?? "/"}>
+                          <span>{subItem.title}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  </>
                 ))}
               </SidebarMenuSub>
               <SidebarMenuSub>
-                {leaderboards.map((board) => (
-                  <SidebarMenuSubItem key={board.uuid}>
-                    <SidebarMenuButton asChild>
-                      <Link to={`/leaderboard/${board.uuid}`}>
-                        {board.leaderboard_name}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuSubItem>
+                {user && leaderboards?.map((board) => (
+                  <>
+                    <SidebarMenuSubItem key={board.uuid}>
+                      <SidebarMenuButton asChild>
+                        <Link to={`/leaderboard/${board.uuid}`}>
+                          {board.leaderboard_name}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuSubItem>
+                    {ownedLeaderboards?.some(
+                      (owned) => JSON.stringify(owned) === JSON.stringify(board)
+                    ) && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuAction>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                          <DropdownMenuItem>
+                            <span>Edit</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <span>Delete</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </>
                 ))}
               </SidebarMenuSub>
             </CollapsibleContent>
