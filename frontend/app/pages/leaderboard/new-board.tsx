@@ -71,7 +71,7 @@ export default function NewBoard() {
         }
       })
       .catch((err) => {
-        throw err
+        //handled by middleware
       });
     setLoading(false);
   }
@@ -87,7 +87,7 @@ export default function NewBoard() {
         navigate("/leaderboard"); // navigate to dynamic route for leaderboard
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   }, [inviteCode]);
 

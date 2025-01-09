@@ -24,6 +24,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import { Leaderboard } from "client";
 
 export function NavLeaderboard({
   items,
@@ -40,7 +41,15 @@ export function NavLeaderboard({
   }[];
 }) {
   const { user } = useAuth();
-  const { leaderboards, ownedLeaderboards } = useLeaderboards();
+  const { leaderboards, ownedLeaderboards, deleteBoard } = useLeaderboards();
+
+  const handleLeaderboardEdit = (board: Leaderboard) => {
+    console.log(board);
+  };
+
+  const handleLeaderboardDelete = (board: Leaderboard) => {
+    deleteBoard(board);
+  };
 
   return (
     <SidebarMenu>
@@ -60,22 +69,28 @@ export function NavLeaderboard({
               </SidebarMenuButton>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <SidebarMenuSub>
-                {item.items?.map((subItem) => (
-                  <>
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <Link to={subItem.url ?? "/"}>
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  </>
-                ))}
-              </SidebarMenuSub>
-              <SidebarMenuSub>
-                {user && leaderboards?.map((board) => (
-                  <>
+              {item.items?.map((subItem) => (
+                <SidebarMenuSub key={subItem.title}>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <Link to={subItem.url ?? "/"}>
+                        <span>{subItem.title}</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
+              ))}
+              {user &&
+                [
+                  ...(leaderboards ?? []),
+                  ...(ownedLeaderboards?.filter(
+                    (owned) =>
+                      !leaderboards?.some(
+                        (joined) => joined.uuid === owned.uuid
+                      )
+                  ) ?? []),
+                ].map((board) => (
+                  <SidebarMenuSub>
                     <SidebarMenuSubItem key={board.uuid}>
                       <SidebarMenuButton asChild>
                         <Link to={`/leaderboard/${board.uuid}`}>
@@ -84,7 +99,7 @@ export function NavLeaderboard({
                       </SidebarMenuButton>
                     </SidebarMenuSubItem>
                     {ownedLeaderboards?.some(
-                      (owned) => JSON.stringify(owned) === JSON.stringify(board)
+                      (owned) => owned.uuid === board.uuid
                     ) && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -93,18 +108,19 @@ export function NavLeaderboard({
                           </SidebarMenuAction>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right" align="start">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleLeaderboardEdit(board)}
+                          >
                             <span>Edit</span>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleLeaderboardDelete(board)}>
                             <span>Delete</span>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}
-                  </>
+                  </SidebarMenuSub>
                 ))}
-              </SidebarMenuSub>
             </CollapsibleContent>
           </SidebarMenuItem>
         </Collapsible>

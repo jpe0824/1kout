@@ -57,7 +57,7 @@ export default function JoinBoard() {
       .then((res) => {
         if (res.response.status === 401) {
           refreshAuth();
-          onSubmit(values)
+          onSubmit(values);
         }
         if (res.response.status === 403) {
           logout();
@@ -72,29 +72,7 @@ export default function JoinBoard() {
         }
       })
       .catch((err) => {
-        // if (err.response.status === 403) {
-        //   console.log("error 403");
-        //   logout();
-        // }
-        // toast({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description: `${err.error.detail}`,
-        //   action: (
-        //     <ToastAction altText="Try again">
-        //       <Button
-        //         onClick={() => {
-        //           if (err.response.status === 401) {
-        //             console.log("error 401");
-        //             refreshAuth();
-        //           }
-        //         }}
-        //       >
-        //         Try again
-        //       </Button>
-        //     </ToastAction>
-        //   ),
-        // });
+        //handled by middleware
       });
     setLoading(false);
   }

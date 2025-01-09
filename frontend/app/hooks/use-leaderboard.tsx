@@ -1,13 +1,11 @@
 import {
   getJoinedLeaderboards,
   getOwnedLeaderboards,
+  deleteLeaderboard,
   Leaderboard,
 } from "client";
 import { useState, useEffect } from "react";
 import { useAuth } from "./auth-provider";
-import { toast } from "./use-toast";
-import { ToastAction } from "@/components/ui/toast";
-import { Button } from "@/components/ui/button";
 
 const useLeaderboards = () => {
   const [leaderboards, setLeaderboards] = useState<Leaderboard[]>([]);
@@ -23,7 +21,6 @@ const useLeaderboards = () => {
             refreshAuth();
             getJoinedLeaderboards();
           }
-
         }
         if (res.response.status === 403) {
           logout();
@@ -34,7 +31,7 @@ const useLeaderboards = () => {
         setLeaderboards(res.data);
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   };
 
@@ -47,7 +44,19 @@ const useLeaderboards = () => {
         setOwnedLeaderboards(res.data);
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
+      });
+  };
+
+  const deleteBoard = async (board: Leaderboard) => {
+    await deleteLeaderboard({ path: { leaderboardId: board.uuid } })
+      .then((res) => {
+        if (!res.response.ok) throw res.error;
+        getJoinedBoards();
+        getOwnedBoards();
+      })
+      .catch((err) => {
+        //handled by middleware
       });
   };
 
@@ -64,10 +73,16 @@ const useLeaderboards = () => {
   useEffect(() => {
     getJoinedBoards();
     getOwnedBoards();
-
   }, [user]);
 
-  return { leaderboards, ownedLeaderboards, getJoinedBoards, getOwnedBoards, resetLeaderboards };
+  return {
+    leaderboards,
+    ownedLeaderboards,
+    getJoinedBoards,
+    getOwnedBoards,
+    resetLeaderboards,
+    deleteBoard,
+  };
 };
 
 export default useLeaderboards;

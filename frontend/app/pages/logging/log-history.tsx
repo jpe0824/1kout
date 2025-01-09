@@ -24,7 +24,7 @@ export default function LogHistory() {
   const [logs, setLogs] = useState<LogHours[]>([]);
 
   const getLogHistory = async () => {
-    if (!user) return
+    if (!user) return;
     await getLogsHours()
       .then((res) => {
         if (res.response.status === 401) {
@@ -38,7 +38,7 @@ export default function LogHistory() {
         setLogs(res.data);
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   };
 

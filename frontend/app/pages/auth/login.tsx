@@ -53,7 +53,7 @@ export default function Login() {
       setLoading(false);
     } catch {
       setLoading(false);
-      //err handled on auth.ts util
+      //handled by middleware
     }
   }
 

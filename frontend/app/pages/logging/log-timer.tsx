@@ -87,34 +87,29 @@ export default function LogTimer() {
       end_time: adjustedEndTime.toISOString().replace("Z", "+00:00"),
     };
 
-    try {
-      const res = await createLog({ body: createLogData });
+    createLog({ body: createLogData })
+      .then((res) => {
+        if (res.response.status === 401) {
+          refreshAuth();
+          handleStop(); // Retry after refresh
+          return;
+        }
+        if (res.response.status === 403) {
+          logout();
+          return;
+        }
+        if (!res.response.ok || !res.data) throw res.error;
 
-      if (res.response.status === 401) {
-        refreshAuth();
-        handleStop(); // Retry after refresh
-        return;
-      }
-      if (res.response.status === 403) {
-        logout();
-        return;
-      }
-      if (!res.response.ok || !res.data) throw res.error;
-
-      toast({ title: "Successfully logged time!" });
-      setStartTime(null);
-      setElapsedTime(0);
-      setPauseStartTime(null);
-      setTotalPauseTime(0);
-    } catch (err) {
-      toast({
-        title: "Failed to log time",
-        variant: "destructive",
+        toast({ title: "Successfully logged time!" });
+        setStartTime(null);
+        setElapsedTime(0);
+        setPauseStartTime(null);
+        setTotalPauseTime(0);
+      })
+      .catch((err) => {
+        //handled by middleware
       });
-      throw err;
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   const formatTime = (ms: number) => {

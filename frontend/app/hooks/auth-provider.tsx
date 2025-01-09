@@ -59,7 +59,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
         }
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   }
 
@@ -74,7 +74,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
         return;
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   }
 
@@ -94,7 +94,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
         })
         .catch((err) => {
           logout();
-          throw err;
+          //handled by middleware
         });
     }
   }

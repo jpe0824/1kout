@@ -90,7 +90,7 @@ export default function NewLog() {
         navigate("/logging");
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
     setLoading(false);
   }
