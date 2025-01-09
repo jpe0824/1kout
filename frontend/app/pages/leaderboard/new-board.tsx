@@ -71,7 +71,7 @@ export default function NewBoard() {
         }
       })
       .catch((err) => {
-        throw err
+        //handled by middleware
       });
     setLoading(false);
   }
@@ -87,7 +87,7 @@ export default function NewBoard() {
         navigate("/leaderboard"); // navigate to dynamic route for leaderboard
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   }, [inviteCode]);
 
@@ -126,7 +126,7 @@ export default function NewBoard() {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="picture"
                 render={({ field }) => (
@@ -139,7 +139,7 @@ export default function NewBoard() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
                 <FormControl>
                   <Checkbox

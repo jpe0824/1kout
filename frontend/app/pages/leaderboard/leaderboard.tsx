@@ -49,7 +49,7 @@ export default function Leaderboard() {
         setUsers(res.data.users_data);
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   };
 
@@ -59,6 +59,10 @@ export default function Leaderboard() {
 
   if (!user) {
     return <NotAuthorized />;
+  }
+
+  if (!leaderboard) {
+    return <div>Loading...</div>;
   }
 
   return (

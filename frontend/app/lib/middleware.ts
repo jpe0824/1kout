@@ -14,7 +14,6 @@ export function useMiddleware() {
   });
 
   client.interceptors.error.use(async (error: any) => {
-    if (!user) return;
     console.error(error);
     if (!error.detail) {
       toast({

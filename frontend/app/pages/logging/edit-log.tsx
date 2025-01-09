@@ -77,7 +77,7 @@ export default function EditLog() {
         setLog(res.data);
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
     setLoading(false);
   }, [logId]);
@@ -120,27 +120,7 @@ export default function EditLog() {
         }
       })
       .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: `${err.error.detail}`,
-          action: (
-            <ToastAction altText="Try again">
-              <Button
-                onClick={() => {
-                  if (err.response.status === 401) {
-                    console.log("error 401");
-                  }
-                  if (err.response.status === 403) {
-                    console.log("error 403");
-                  }
-                }}
-              >
-                Try again
-              </Button>
-            </ToastAction>
-          ),
-        });
+        //handled by middleware
       });
     setLoading(false);
   }

@@ -41,6 +41,7 @@ const AuthContext = createContext<AuthContextState>(initialState);
 export function AuthProvider({ children, ...props }: AuthProviderProps) {
   const [user, setUser] = useLocalStorage("user", null);
   const [refreshTryAgain, setRefreshTryAgain] = useState(true);
+  const { resetLeaderboards } = useLeaderboards();
   const navigate = useNavigate();
 
   async function loginUser(loginData: BodyLogin): Promise<void> {
@@ -58,7 +59,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
         }
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   }
 
@@ -73,7 +74,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
         return;
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   }
 
@@ -93,7 +94,7 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
         })
         .catch((err) => {
           logout();
-          throw err;
+          //handled by middleware
         });
     }
   }
@@ -103,8 +104,8 @@ export function AuthProvider({ children, ...props }: AuthProviderProps) {
     setUser(null);
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    resetLeaderboards();
     navigate("/auth/login", { replace: true });
-    navigate(0);
   }
 
   const value = useMemo(

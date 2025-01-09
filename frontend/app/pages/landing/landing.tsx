@@ -33,7 +33,7 @@ export function Landing() {
         setHours(res.data);
       })
       .catch((err) => {
-        throw err;
+        //handled by middleware
       });
   };
 

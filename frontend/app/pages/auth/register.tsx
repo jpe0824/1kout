@@ -67,7 +67,7 @@ export default function RegisterUser() {
         }
       })
       .catch((err) => {
-        throw err
+        //handled by middleware
       });
     setLoading(false);
   }
