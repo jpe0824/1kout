@@ -78,7 +78,7 @@ pyasn1==0.6.1
     # via
     #   python-jose
     #   rsa
-pydantic==2.10.5
+pydantic==2.10.6
     # via
     #   -r backend/requirements.in
     #   beanie
