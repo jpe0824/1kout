@@ -110,7 +110,7 @@ python-jose==3.3.0
     # via -r backend/requirements.in
 python-multipart==0.0.20
     # via fastapi
-pytz==2024.2
+pytz==2025.1
     # via -r backend/requirements.in
 pyyaml==6.0.2
     # via
