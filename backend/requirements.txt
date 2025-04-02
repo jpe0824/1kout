@@ -78,7 +78,7 @@ pyasn1==0.4.8
     # via
     #   python-jose
     #   rsa
-pydantic==2.10.6
+pydantic==2.11.1
     # via
     #   -r backend/requirements.in
     #   beanie
@@ -86,7 +86,7 @@ pydantic==2.10.6
     #   lazy-model
     #   pydantic-extra-types
     #   pydantic-settings
-pydantic-core==2.27.2
+pydantic-core==2.33.0
     # via pydantic
 pydantic-extra-types==2.10.1
     # via fastapi
@@ -146,6 +146,9 @@ typing-extensions==4.12.2
     #   pydantic-extra-types
     #   rich-toolkit
     #   typer
+    #   typing-inspection
+typing-inspection==0.4.0
+    # via pydantic
 ujson==5.10.0
     # via fastapi
 uvicorn[standard]==0.34.0
