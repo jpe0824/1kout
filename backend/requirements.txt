@@ -90,7 +90,7 @@ pydantic-core==2.33.1
     # via pydantic
 pydantic-extra-types==2.10.1
     # via fastapi
-pydantic-settings==2.8.1
+pydantic-settings==2.9.1
     # via
     #   -r backend/requirements.in
     #   fastapi
@@ -148,7 +148,9 @@ typing-extensions==4.12.2
     #   typer
     #   typing-inspection
 typing-inspection==0.4.0
-    # via pydantic
+    # via
+    #   pydantic
+    #   pydantic-settings
 ujson==5.10.0
     # via fastapi
 uvicorn[standard]==0.34.1
