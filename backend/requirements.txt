@@ -74,7 +74,7 @@ orjson==3.10.13
     # via fastapi
 passlib==1.7.4
     # via -r backend/requirements.in
-pyasn1==0.4.8
+pyasn1==0.6.1
     # via
     #   python-jose
     #   rsa
@@ -106,7 +106,7 @@ python-dotenv==1.0.1
     # via
     #   pydantic-settings
     #   uvicorn
-python-jose==3.4.0
+python-jose==3.5.0
     # via -r backend/requirements.in
 python-multipart==0.0.20
     # via fastapi
