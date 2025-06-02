@@ -153,7 +153,7 @@ typing-inspection==0.4.0
     #   pydantic-settings
 ujson==5.10.0
     # via fastapi
-uvicorn[standard]==0.34.2
+uvicorn[standard]==0.34.3
     # via
     #   -r backend/requirements.in
     #   fastapi
