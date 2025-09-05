@@ -13,7 +13,7 @@ anyio==4.8.0
     #   watchfiles
 bcrypt==4.3.0
     # via -r backend/requirements.in
-beanie==1.29.0
+beanie==2.0.0
     # via -r backend/requirements.in
 certifi==2025.4.26
     # via
@@ -58,7 +58,7 @@ itsdangerous==2.2.0
     # via fastapi
 jinja2==3.1.5
     # via fastapi
-lazy-model==0.2.0
+lazy-model==0.3.0
     # via beanie
 markdown-it-py==3.0.0
     # via rich
@@ -67,9 +67,7 @@ markupsafe==3.0.2
 mdurl==0.1.2
     # via markdown-it-py
 motor==3.7.0
-    # via
-    #   -r backend/requirements.in
-    #   beanie
+    # via -r backend/requirements.in
 orjson==3.10.13
     # via fastapi
 passlib==1.7.4
@@ -98,8 +96,10 @@ pygments==2.19.1
     # via rich
 pyjwt==2.10.1
     # via -r backend/requirements.in
-pymongo==4.9.2
-    # via motor
+pymongo==4.13.2
+    # via
+    #   beanie
+    #   motor
 python-decouple==3.8
     # via -r backend/requirements.in
 python-dotenv==1.0.1
@@ -132,8 +132,6 @@ sniffio==1.3.1
     # via anyio
 starlette==0.41.3
     # via fastapi
-toml==0.10.2
-    # via beanie
 typer==0.15.1
     # via fastapi-cli
 typing-extensions==4.12.2
