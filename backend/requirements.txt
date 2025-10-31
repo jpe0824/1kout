@@ -78,7 +78,7 @@ pyasn1==0.4.8
     # via
     #   python-jose
     #   rsa
-pydantic==2.11.3
+pydantic==2.12.3
     # via
     #   -r backend/requirements.in
     #   beanie
@@ -86,7 +86,7 @@ pydantic==2.11.3
     #   lazy-model
     #   pydantic-extra-types
     #   pydantic-settings
-pydantic-core==2.33.1
+pydantic-core==2.41.4
     # via pydantic
 pydantic-extra-types==2.10.1
     # via fastapi
@@ -136,7 +136,7 @@ toml==0.10.2
     # via beanie
 typer==0.15.1
     # via fastapi-cli
-typing-extensions==4.12.2
+typing-extensions==4.15.0
     # via
     #   anyio
     #   beanie
@@ -147,7 +147,7 @@ typing-extensions==4.12.2
     #   rich-toolkit
     #   typer
     #   typing-inspection
-typing-inspection==0.4.0
+typing-inspection==0.4.2
     # via
     #   pydantic
     #   pydantic-settings
